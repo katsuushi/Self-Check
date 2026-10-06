@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "SelfCheck",
-    "slug": "SelfCheck",
+    "slug": "selfcheck",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -37,6 +37,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "976f0e74-e29b-4ba8-8f8c-7c7c8cf988da"
+      }
+    },
+    "owner": "seg_fault"
   }
 }
