@@ -1,14 +1,10 @@
 import { Text, View, StyleSheet, useWindowDimensions } from "react-native";
-import { getStyles } from "../styles/styles.jsx";
 export default function Logo() {
     const { width, height } = useWindowDimensions();
-    const styles = getStyles();
 
     return (
-        <>
-            <View style={[styles.header, { height: height * 0.125 }]}>
-                <Text className="text-3xl text-white">SelfCheck</Text>
-            </View>
-        </>
+        <View className="bg-black h-[12vh]">
+            <Text className="text-4xl text-white font-bold mt-auto p-4">SelfCheck</Text>
+        </View>
     );
 }
