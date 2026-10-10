@@ -1,11 +1,11 @@
 import { Text, View, StyleSheet, useWindowDimensions } from "react-native";
+import AddHabitBtn from './components/AddHabitBtn.jsx'
 export default function Habits() {
 
 
     return (
         <View style={styles.body}>
-            <Text>This is habits</Text>
-
+            <AddHabitBtn />
         </View>
     );
 }

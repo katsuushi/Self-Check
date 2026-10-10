@@ -3,8 +3,8 @@ export default function Tasks() {
 
 
     return (
-        <View style={styles.body}>
-           <Text>This is tasks</Text> 
+        <View className="flex justify-center align-center" style={styles.body}>
+           <Text className="text-white font-bold text-center">This is tasks</Text> 
         </View>
     );
 }
