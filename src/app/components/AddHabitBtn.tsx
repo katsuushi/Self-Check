@@ -1,9 +1,13 @@
 import { Pressable, Text, View } from "react-native";
-import useState from "react";
-export default function AddHabitBtn(toggle) {
+
+type AddHabitBtnProps = {
+    toggle: () => void;
+}
+
+export default function AddHabitBtn(props: AddHabitBtnProps) {
     return (
         <Pressable
-            onClick={toggle}
+            onPress={() => props.toggle()}
             className="absolute bottom-8 right-8 w-16 h-16 rounded-md bg-cyan-400 active:bg-cyan-500 flex justify-center align-center"
         >
             <View pointerEvents="none">
