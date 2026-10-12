@@ -12,7 +12,7 @@ export default function NavigationBar() {
                 </Link>
             </View>
             <View className="flex justify-center align-center  w-[33%]">
-                <Link href="tasks">
+                <Link href="/tasks">
                     <Text className="color-white text-xl font-bold text-center">
                         Tasks
                     </Text>

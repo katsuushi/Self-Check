@@ -1,16 +1,11 @@
-import { Text, View, StyleSheet, useWindowDimensions } from "react-native";
-import AddHabitBtn from './components/AddHabitBtn'
-import AddHabitPopup from "./components/AddHabitPopup";
-import { useState } from "react";
-export default function Habits() {
+import { View, StyleSheet } from "react-native";
+import AddHabit from './components/AddHabit'
 
-    const [toggleAddHabitComponent, setToggleAddHabitComponent] = useState(false);
+export default function Habits() {
 
     return (
         <View style={styles.body}>
-            <AddHabitBtn toggle={() => setToggleAddHabitComponent(!toggleAddHabitComponent)} />
-            {toggleAddHabitComponent && <AddHabitPopup />}
-
+            <AddHabit/>
         </View>
     );
 }
@@ -22,4 +17,3 @@ const styles = StyleSheet.create({
         height: "100%",
     }
 })
-
