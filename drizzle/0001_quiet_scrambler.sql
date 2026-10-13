@@ -1,0 +1,1 @@
+ALTER TABLE `habit` ADD `color` integer NOT NULL;

@@ -47,7 +47,7 @@ export default function AddHabit(props: AddHabitBtnProps) {
 
     return (
         <View className="absolute inset-0 items-center justify-center">
-            <Pressable className="absolute inset-0 bg-black/60" onPress={close} />
+            <Pressable className="absolute inset-0 bg-black/50" onPress={close} />
 
             <View className="w-[85vw] rounded-3xl bg-black p-4">
                 <View className="h-10 flex-row items-center justify-between">
