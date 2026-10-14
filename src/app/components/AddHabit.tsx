@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
+import { createHabit } from "../../services/createHabit"
 
 const COLORS = ["#22d3ee", "#34d399", "#fbbf24", "#f87171", "#a78bfa", "#f472b6"];
 
@@ -24,6 +25,11 @@ export default function AddHabit(props: AddHabitBtnProps) {
         setDescription("");
         setColor(COLORS[0]);
     };
+
+    const addHabit = (title: string, description: string, color: string) => {
+        createHabit(title, description, color)
+        close();
+    }
 
     if (!visible) {
         return (
@@ -54,7 +60,7 @@ export default function AddHabit(props: AddHabitBtnProps) {
                     <Text className="text-4xl text-white font-bold">Add Habit</Text>
                     <Pressable
                         disabled={!canSave}
-                        onPress={close}
+                        onPress={() => addHabit(title, description, color)}
                         className="h-10 w-10 flex justify-center align-center rounded-md active:bg-white/20"
                     >
                         <Text
