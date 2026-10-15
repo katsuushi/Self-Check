@@ -5,11 +5,16 @@ import HabitDisplay from "./components/HabitDisplay";
 import { useState } from "react";
 
 export default function Habits() {
-    
+
+    // Bumping this number tells HabitDisplay to refetch its habits.
+    const [refreshKey, setRefreshKey] = useState(0);
+
+    const refetchHabits = () => setRefreshKey(key => key + 1);
+
     return (
         <View style={styles.body}>
-            <HabitDisplay />
-            <AddHabit/>
+            <HabitDisplay refreshKey={refreshKey} updateUI={refetchHabits} />
+            <AddHabit updateUI={refetchHabits} />
         </View>
     );
 }

@@ -1,38 +1,58 @@
 import { Pressable, View, Text } from "react-native";
 import { useState } from "react"
+import { deleteHabit } from "@/services/deleteHabit";
+import { updateHabitData } from "@/services/updateHabitData"
 
 type HabitBodyProps = {
+    id: number;
     title: string;
-    description?: string;
     color: string;
+    description?: string | null;
     completed: boolean;
+    streak: number;
+    updateUI: () => void;
 };
 
 export default function HabitBody({
+    id,
     title,
-    description,
     color,
+    description,
     completed,
+    streak,
+    updateUI
 }: HabitBodyProps) {
+
+    const [isCompleted, setIsCompleted] = useState(completed);
+    const [currentStreak, setCurrentStreak] = useState(streak)
+
 
     const onMark = () => {
         // onMark - marking habit as completed / not completed
-        completed = !completed
-        console.log("onMark call")
+        setCurrentStreak(isCompleted ? currentStreak - 1 : currentStreak + 1)
+        setIsCompleted(!isCompleted)
+        updateHabitData(id)
+    }
+
+    const onDelete = () => {
+        deleteHabit(id);
+        updateUI();
     }
 
     return (
         <View className="flex-row items-center justify-between gap-3 rounded-xl bg-black p-4 border-l-4" style={{ borderLeftColor: color }}>
-            <View className="flex-1 min-w-0">
-                <Text className="text-2xl font-semibold text-white truncate">{title}</Text>
+            <View className="flex-row gap-x-4 min-w-0">
+                <Text className="text-2xl font-semibold text-white text-center truncate">{title}</Text>
+
+                <Text className="text-2xl font-semibold text-white truncate">{currentStreak}</Text>
             </View>
             <View className="flex-row items-center gap-2">
                 <Pressable
                     onPress={onMark}
-                    style={!completed ? { borderColor: color } : undefined}
-                    className={`w-10 h-10 rounded-full border-white flex items-center justify-center active:bg-white/10 ${completed ? "bg-cyan-400 border-cyan-400" : ``
+                    style={!isCompleted ? { borderColor: color } : undefined}
+                    className={`w-10 h-10 rounded-full border-white flex items-center justify-center ${isCompleted ? "bg-cyan-400 border-cyan-400" : ``
                         }`}
-                    accessibilityLabel={completed ? "Mark incomplete" : "Mark complete"}
+                    accessibilityLabel={isCompleted ? "Mark incomplete" : "Mark complete"}
                 >
                     <View pointerEvents="none">
                         <Text className="text-white text-xl font-bold">✓</Text>
@@ -41,7 +61,7 @@ export default function HabitBody({
                 <Pressable onPress={() => console.log("Onedit")} className="w-10 rounded-full h-10 items-center justify-center active:bg-white/10" accessibilityLabel="Edit habit">
                     <Text className="text-white/70 text-2xl ">✎</Text>
                 </Pressable>
-                <Pressable onPress={() => console.log("onDelete")} className="w-10 h-10 rounded-full items-center justify-center active:bg-red-500/20" accessibilityLabel="Delete habit">
+                <Pressable onPress={onDelete} className="w-10 h-10 rounded-full items-center justify-center active:bg-red-500/20" accessibilityLabel="Delete habit">
                     <Text className="text-white/50 text-2xl">...</Text>
                 </Pressable>
             </View>

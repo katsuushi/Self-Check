@@ -10,10 +10,16 @@ type Habit = {
     description: string | null;
     color: string;
     completed: boolean;
+    streak: number;
     lastCompleted: Date | null;
 }
 
-export default function HabitDisplay() {
+type HabitDisplayProps = {
+    refreshKey: number;
+    updateUI: () => void;
+}
+
+export default function HabitDisplay(props: HabitDisplayProps) {
 
     const [habits, setHabits] = useState<Habit[]>([])
 
@@ -24,19 +30,27 @@ export default function HabitDisplay() {
         })
     }
 
+    const incrementRefreshKey = () => {
+        props.updateUI()
+    }
+
+
     useEffect(() => {
         getHabits()
-    }, [])
+    }, [props.refreshKey])
 
     return (
         <ScrollView className="p-4" contentContainerStyle={{ gap: 12 }}>
             {habits.map(habit => (
                 <HabitBody
                     key={habit.id}
+                    id={habit.id}
                     title={habit.title}
                     description={habit.description ?? undefined}
                     color={habit.color}
                     completed={habit.completed}
+                    streak={habit.streak}
+                    updateUI={incrementRefreshKey}
                 />
             ))}
         </ScrollView>

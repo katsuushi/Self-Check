@@ -6,6 +6,7 @@ const COLORS = ["#22d3ee", "#34d399", "#fbbf24", "#f87171", "#a78bfa", "#f472b6"
 
 type AddHabitBtnProps = {
     toggle?: () => void;
+    updateUI: () => void; // Makes the habitDisplay component refetch the habits
 }
 
 export default function AddHabit(props: AddHabitBtnProps) {
@@ -26,9 +27,10 @@ export default function AddHabit(props: AddHabitBtnProps) {
         setColor(COLORS[0]);
     };
 
-    const addHabit = (title: string, description: string, color: string) => {
-        createHabit(title, description, color)
+    const addHabit = async (title: string, description: string, color: string) => {
+        await createHabit(title, description, color)
         close();
+        props.updateUI();
     }
 
     if (!visible) {
