@@ -8,8 +8,8 @@ export const habit = sqliteTable("habit", {
     description: text("description"),
     color: text("color").notNull(),
     completed: integer("done", { mode: 'boolean' }).notNull().default(false),
-    lastCompleted: integer("lastCompleted", { mode: 'timestamp' }),
-    prevLastCompletion: integer({ mode: 'timestamp' }),
+    lastCompleted: integer("lastCompleted", { mode: 'timestamp' }).notNull(),
+    prevLastCompletion: integer({ mode: 'timestamp' }).notNull(),
     streak: integer({ mode: 'number' }).default(0).notNull(),
     streakHistory: text({ mode: "json" })
         .$type<Record<string, Value>[]>()

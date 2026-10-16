@@ -6,6 +6,9 @@ import m0001 from './0001_quiet_scrambler.sql';
 import m0002 from './0002_flimsy_virginia_dare.sql';
 import m0003 from './0003_eager_blob.sql';
 import m0004 from './0004_far_kang.sql';
+import m0005 from './0005_abandoned_mac_gargan.sql';
+import m0006 from './0006_curious_mother_askani.sql';
+import m0007 from './0007_complex_triton.sql';
 
   export default {
     journal,
@@ -14,7 +17,10 @@ import m0004 from './0004_far_kang.sql';
 m0001,
 m0002,
 m0003,
-m0004
+m0004,
+m0005,
+m0006,
+m0007
     }
   }
   

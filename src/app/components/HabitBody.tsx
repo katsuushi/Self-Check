@@ -1,7 +1,8 @@
 import { Pressable, View, Text } from "react-native";
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { deleteHabit } from "@/services/deleteHabit";
 import { updateHabitData } from "@/services/updateHabitData"
+import { updateHabitLoop } from "@/services/updateHabitLoop";
 
 type HabitBodyProps = {
     id: number;
@@ -26,6 +27,16 @@ export default function HabitBody({
     const [isCompleted, setIsCompleted] = useState(completed);
     const [currentStreak, setCurrentStreak] = useState(streak)
 
+    useEffect(() => {
+        calendarLoop()
+    }, [])
+
+    const calendarLoop = async () => {
+        const res = await updateHabitLoop(id);
+        if (res == "update") {
+            setIsCompleted(false)
+        }
+    }
 
     const onMark = () => {
         // onMark - marking habit as completed / not completed
@@ -34,8 +45,8 @@ export default function HabitBody({
         updateHabitData(id)
     }
 
-    const onDelete = () => {
-        deleteHabit(id);
+    const onDelete = async () => {
+        await deleteHabit(id);
         updateUI();
     }
 

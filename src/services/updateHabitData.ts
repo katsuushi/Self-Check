@@ -15,8 +15,5 @@ export const updateHabitData = async (id: number) => {
     }
     const res = await db.update(habit).set({ streak: newStreak, completed: !row.completed, lastCompleted: newLastCompleted }).where(eq(habit.id, id))
 
-    console.log(`Previous values: ${row.completed}, ${row.streak}, ${row.lastCompleted}`)
-    console.log(`New values: ${!row.completed}, ${newStreak}, ${newLastCompleted}`)
-
-    return res
+    return 200
 } 
