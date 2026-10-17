@@ -1,11 +1,14 @@
 import { db } from "../db/client"
 import { habit } from "@/db/schema"
+import { Success } from "./types/types"
 
-export const createHabit = async (title: string, description: string, color: string) => {
-    console.log(`Trying to create a habit with: ${title} ${description} and ${color}`)
+export const createHabit = async (title: string, description: string, color: string): Promise<Success> => {
+
+    if (!title || !description || !color) {
+        return { success: false, error: "One of the fields is missing"}
+    }  
 
     const date = new Date()
-
     const res = await db.insert(habit).values({title: title, description: description, color: color, lastCompleted: date, prevLastCompletion: date})
-
+    return {success: true}
 } 

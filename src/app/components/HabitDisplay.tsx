@@ -23,11 +23,9 @@ export default function HabitDisplay(props: HabitDisplayProps) {
 
     const [habits, setHabits] = useState<Habit[]>([])
 
-    const getHabits = () => {
-        listHabits().then(rows => {
-            console.log(rows)
-            setHabits(rows)
-        })
+    const getHabits = async () => {
+        const res = await listHabits()
+        if (res) setHabits(res)
     }
 
     const incrementRefreshKey = () => {

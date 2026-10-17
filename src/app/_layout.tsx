@@ -25,7 +25,7 @@ export default function RootLayout() {
         <Stack screenOptions={{
             headerShown: false
         }} />
-        <NavigationBar />
-
     </>
+    // <NavigationBar /> - will be added back after finishing habits
+    
 }

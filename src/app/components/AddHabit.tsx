@@ -28,9 +28,15 @@ export default function AddHabit(props: AddHabitBtnProps) {
     };
 
     const addHabit = async (title: string, description: string, color: string) => {
-        await createHabit(title, description, color)
-        close();
-        props.updateUI();
+        const res = await createHabit(title, description, color)
+        if (res.success) {
+            close();
+            props.updateUI();
+        } else if (res.error) {
+            // Error handling
+        } else {
+            // Something went wrong
+        }
     }
 
     if (!visible) {

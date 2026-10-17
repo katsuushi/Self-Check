@@ -33,21 +33,26 @@ export default function HabitBody({
 
     const calendarLoop = async () => {
         const res = await updateHabitLoop(id);
-        if (res == "update") {
-            setIsCompleted(false)
+        if (res.success) {
+            setIsCompleted(Boolean(res.data))
+        } else if (!res.success) {
+            // Error handling
         }
     }
 
-    const onMark = () => {
+    const onMark = async () => {
         // onMark - marking habit as completed / not completed
         setCurrentStreak(isCompleted ? currentStreak - 1 : currentStreak + 1)
         setIsCompleted(!isCompleted)
-        updateHabitData(id)
+        const res = await updateHabitData(id)
+        if (!res.success) {
+            // Error handling
+        }
     }
 
     const onDelete = async () => {
-        await deleteHabit(id);
-        updateUI();
+        const res = await deleteHabit(id);
+        if (res.success) updateUI();
     }
 
     return (
