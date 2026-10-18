@@ -43,7 +43,7 @@ export default function AddHabit(props: AddHabitBtnProps) {
         return (
             <Pressable
                 onPress={() => setOpen(true)}
-                className="absolute bottom-8 right-8 w-16 h-16 rounded-md bg-cyan-400 active:bg-cyan-500 flex justify-center align-center"
+                className="absolute bottom-12 right-12 w-16 h-16 rounded-md bg-cyan-400 active:bg-cyan-500 flex justify-center align-center"
             >
                 <View pointerEvents="none">
                     <Text

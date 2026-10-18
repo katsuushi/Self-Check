@@ -24,9 +24,6 @@ export default function HabitBody({
     updateUI
 }: HabitBodyProps) {
 
-    const [isCompleted, setIsCompleted] = useState(completed);
-    const [currentStreak, setCurrentStreak] = useState(streak)
-
     useEffect(() => {
         calendarLoop()
     }, [])
@@ -34,7 +31,8 @@ export default function HabitBody({
     const calendarLoop = async () => {
         const res = await updateHabitLoop(id);
         if (res.success) {
-            setIsCompleted(Boolean(res.data))
+            //setIsCompleted(Boolean(res.data))
+            updateUI()
         } else if (!res.success) {
             // Error handling
         }
@@ -42,11 +40,18 @@ export default function HabitBody({
 
     const onMark = async () => {
         // onMark - marking habit as completed / not completed
-        setCurrentStreak(isCompleted ? currentStreak - 1 : currentStreak + 1)
-        setIsCompleted(!isCompleted)
+        console.log("calling onMark")
         const res = await updateHabitData(id)
-        if (!res.success) {
-            // Error handling
+        console.log(res)
+        if (res.success && typeof res.data === "object") {
+            //setCurrentStreak(res.data["streak"])
+            //setIsCompleted(res.data["completed"])
+            console.log("onMark updateUI")
+            updateUI();
+        } else if (!res.success) {
+            //
+        } else {
+            // Something has gone wrong
         }
     }
 
@@ -60,15 +65,15 @@ export default function HabitBody({
             <View className="flex-row gap-x-4 min-w-0">
                 <Text className="text-2xl font-semibold text-white text-center truncate">{title}</Text>
 
-                <Text className="text-2xl font-semibold text-white truncate">{currentStreak}</Text>
+                <Text className="text-2xl font-semibold text-white truncate">{streak}</Text>
             </View>
             <View className="flex-row items-center gap-2">
                 <Pressable
                     onPress={onMark}
-                    style={!isCompleted ? { borderColor: color } : undefined}
-                    className={`w-10 h-10 rounded-full border-white flex items-center justify-center ${isCompleted ? "bg-cyan-400 border-cyan-400" : ``
+                    style={!completed ? { borderColor: color } : undefined}
+                    className={`w-10 h-10 rounded-full border-white flex items-center justify-center ${completed ? "bg-cyan-400 border-cyan-400" : ``
                         }`}
-                    accessibilityLabel={isCompleted ? "Mark incomplete" : "Mark complete"}
+                    accessibilityLabel={completed ? "Mark incomplete" : "Mark complete"}
                 >
                     <View pointerEvents="none">
                         <Text className="text-white text-xl font-bold">✓</Text>
