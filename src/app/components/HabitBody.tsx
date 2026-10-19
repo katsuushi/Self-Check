@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router"
 import { Pressable, View, Text } from "react-native";
 import { useEffect, useState } from "react"
 import { deleteHabit } from "@/services/deleteHabit";
@@ -23,6 +24,8 @@ export default function HabitBody({
     streak,
     updateUI
 }: HabitBodyProps) {
+
+    const router = useRouter();
 
     useEffect(() => {
         calendarLoop()
@@ -54,6 +57,20 @@ export default function HabitBody({
             // Something has gone wrong
         }
     }
+    
+    const onOverview = () => {
+        router.push({
+            pathname: '../habitoverview',
+            params: {
+                id: id,
+                title: title,
+                color: color,
+                description: description,
+                completed: String(completed),
+                streak: streak,
+            }
+        })
+    }
 
     const onDelete = async () => {
         const res = await deleteHabit(id);
@@ -79,7 +96,7 @@ export default function HabitBody({
                         <Text className="text-white text-xl font-bold">✓</Text>
                     </View>
                 </Pressable>
-                <Pressable onPress={() => console.log("Onedit")} className="w-10 rounded-full h-10 items-center justify-center active:bg-white/10" accessibilityLabel="Edit habit">
+                <Pressable onPress={onOverview} className="w-10 rounded-full h-10 items-center justify-center active:bg-white/10" accessibilityLabel="Edit habit">
                     <Text className="text-white/70 text-2xl ">✎</Text>
                 </Pressable>
                 <Pressable onPress={onDelete} className="w-10 h-10 rounded-full items-center justify-center active:bg-red-500/20" accessibilityLabel="Delete habit">

@@ -4,11 +4,11 @@ import { Success } from "./types/types"
 
 export const createHabit = async (title: string, description: string, color: string): Promise<Success> => {
 
-    if (!title || !description || !color) {
-        return { success: false, error: "One of the fields is missing"}
-    }  
+    if (!title || !color) {
+        return { success: false, error: "One of the fields is missing" }
+    }
 
     const date = new Date()
-    const res = await db.insert(habit).values({title: title, description: description, color: color, lastCompleted: date, prevLastCompletion: date})
-    return {success: true}
+    const res = await db.insert(habit).values({ title: title, description: description, color: color, lastCompleted: date, prevLastCompletion: date })
+    return { success: true }
 } 

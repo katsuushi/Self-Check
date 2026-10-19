@@ -34,7 +34,10 @@ export default function AddHabit(props: AddHabitBtnProps) {
             props.updateUI();
         } else if (res.error) {
             // Error handling
+            console.log("Error handling")
+            console.log(res.error)
         } else {
+            console.log("something went wrong")
             // Something went wrong
         }
     }
