@@ -21,7 +21,7 @@ export default function Habits() {
 
 const styles = StyleSheet.create({
     body: {
-        backgroundColor: "#202020",
+        backgroundColor: "#000",
         width: "100%",
         height: "100%",
     }

@@ -1,7 +1,8 @@
 import { listHabits } from "@/services/listHabits";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ScrollView } from "react-native";
 import HabitBody from "./HabitBody";
+import { useFocusEffect } from "expo-router";
 
 
 type Habit = {
@@ -22,13 +23,11 @@ type HabitDisplayProps = {
 export default function HabitDisplay(props: HabitDisplayProps) {
 
     const [habits, setHabits] = useState<Habit[]>([])
-
+    const isFirstRender = useRef(true)
     const getHabits = async () => {
-        console.log("getHabbits called form HabitDisplay")
-
         const res = await listHabits()
         console.log(res)
-        if (res) { setHabits(res), console.log("setHabits(res)") }
+        if (res) { setHabits(res) }
 
     }
 
@@ -36,8 +35,17 @@ export default function HabitDisplay(props: HabitDisplayProps) {
         props.updateUI()
     }
 
+    useFocusEffect(
+        useCallback(() => {
+            getHabits()
+        }, [])
+    )
 
     useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false
+            return
+        }
         getHabits()
     }, [props.refreshKey])
 

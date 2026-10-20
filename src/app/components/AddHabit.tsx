@@ -94,7 +94,7 @@ export default function AddHabit(props: AddHabitBtnProps) {
                     onChangeText={setTitle}
                     placeholder="e.g. Drink water"
                     placeholderTextColor="#6b7280"
-                    className="rounded-xl bg-[#202020] px-4 py-3 text-base text-white"
+                    className="rounded-xl bg-[#000] px-4 py-3 text-base text-white"
                 />
 
                 <Text className="text-xs text-white/50 font-bold uppercase mt-4 mb-1">
@@ -107,7 +107,7 @@ export default function AddHabit(props: AddHabitBtnProps) {
                     placeholderTextColor="#6b7280"
                     multiline
                     textAlignVertical="top"
-                    className="h-28 rounded-xl bg-[#202020] px-4 py-3 text-base text-white"
+                    className="h-28 rounded-xl bg-[#000] px-4 py-3 text-base text-white"
                 />
 
                 <Text className="text-xs text-white/50 font-bold uppercase mt-4 mb-2">

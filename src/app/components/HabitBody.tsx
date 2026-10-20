@@ -57,7 +57,7 @@ export default function HabitBody({
             // Something has gone wrong
         }
     }
-    
+
     const onOverview = () => {
         router.push({
             pathname: '../habitoverview',
@@ -72,10 +72,6 @@ export default function HabitBody({
         })
     }
 
-    const onDelete = async () => {
-        const res = await deleteHabit(id);
-        if (res.success) updateUI();
-    }
 
     return (
         <View className="flex-row items-center justify-between gap-3 rounded-xl bg-black p-4 border-l-4" style={{ borderLeftColor: color }}>
@@ -97,10 +93,7 @@ export default function HabitBody({
                     </View>
                 </Pressable>
                 <Pressable onPress={onOverview} className="w-10 rounded-full h-10 items-center justify-center active:bg-white/10" accessibilityLabel="Edit habit">
-                    <Text className="text-white/70 text-2xl ">✎</Text>
-                </Pressable>
-                <Pressable onPress={onDelete} className="w-10 h-10 rounded-full items-center justify-center active:bg-red-500/20" accessibilityLabel="Delete habit">
-                    <Text className="text-white/50 text-2xl">...</Text>
+                    <Text className="text-white/70 text-2xl ">...</Text>
                 </Pressable>
             </View>
         </View>

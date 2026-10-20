@@ -19,5 +19,7 @@ export default function NavigationBar() {
                 </Link>
             </View>
         </View>
+
+        // Add a button redirecting to settings
     );
 }
