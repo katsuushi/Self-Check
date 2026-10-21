@@ -3,6 +3,13 @@ import { db } from "../db/client"
 import { habit } from "@/db/schema"
 
 export const listHabits = async () => {
-    const res = await db.select().from(habit).orderBy(asc(habit.id))
+    let res;
+    try {
+        res = await db.select().from(habit).orderBy(asc(habit.id))
+    } catch (error) {
+        console.log(error)
+        console.log(res)
+        return [];
+    }
     return res
 } 

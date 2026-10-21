@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm"
 import { Success } from "./types/types"
 
 export const deleteHabit = async (id: number): Promise<Success> => {
+    console.log("a deleteHabit has been called!")
     if (!id) return { success: false, error: "Id field is empty" }
     const res = await db.delete(habit).where(eq(habit.id, id))
     if (res.changes === 0) {
