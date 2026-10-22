@@ -1,6 +1,7 @@
 import { asc } from "drizzle-orm"
 import { db } from "../db/client"
 import { habit } from "@/db/schema"
+import { normalizeHabitHistory } from "@/db/history"
 
 export const listHabits = async () => {
     let res;
@@ -11,5 +12,5 @@ export const listHabits = async () => {
         console.log(res)
         return [];
     }
-    return res
+    return res.map((row) => ({ ...row, habitHistory: normalizeHabitHistory(row.habitHistory) }))
 } 

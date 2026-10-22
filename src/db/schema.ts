@@ -1,6 +1,7 @@
 import { sqliteTable, integer, text } from "drizzle-orm/sqlite-core"
+import { sql } from "drizzle-orm"
 
-type Value = number | string
+export type HabitHistory = Record<string, boolean>;
 
 export const habit = sqliteTable("habit", {
     id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
@@ -11,9 +12,9 @@ export const habit = sqliteTable("habit", {
     lastCompleted: integer("lastCompleted", { mode: 'timestamp' }).notNull(),
     prevLastCompletion: integer({ mode: 'timestamp' }).notNull(),
     streak: integer({ mode: 'number' }).default(0).notNull(),
-    createdAt: integer({mode: 'timestamp'}).notNull(),
+    createdAt: integer({ mode: 'timestamp' }).notNull(),
     habitHistory: text({ mode: "json" })
-        .$type<Record<string, Value>[]>()
+        .$type<HabitHistory>()
         .notNull()
-        .default([]),
+        .default(sql`'{}'`),
 })

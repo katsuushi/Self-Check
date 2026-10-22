@@ -9,7 +9,7 @@ CREATE TABLE `__new_habit` (
 	`prevLastCompletion` integer NOT NULL,
 	`streak` integer DEFAULT 0 NOT NULL,
 	`createdAt` integer NOT NULL,
-	`habitHistory` text DEFAULT '[]' NOT NULL
+	`habitHistory` text DEFAULT '{}' NOT NULL
 );
 --> statement-breakpoint
 INSERT INTO `__new_habit`("id", "title", "description", "color", "done", "lastCompleted", "prevLastCompletion", "streak", "createdAt", "habitHistory") SELECT "id", "title", "description", "color", "done", "lastCompleted", COALESCE("prevLastCompletion", "lastCompleted"), "streak", "lastCompleted", "streakHistory" FROM `habit`;--> statement-breakpoint

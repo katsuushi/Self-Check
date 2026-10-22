@@ -10,7 +10,7 @@ export const createHabit = async (title: string, description: string, color: str
 
     const date = new Date()
     try {
-        await db.insert(habit).values({ title: title, description: description, color: color, lastCompleted: date, prevLastCompletion: date, createdAt: date })
+        await db.insert(habit).values({ title: title, description: description, color: color, lastCompleted: date, prevLastCompletion: date, createdAt: date, habitHistory: {} })
     } catch (error) {
         return {success: false, error: "Inserting into database failed"}
     }

@@ -4,14 +4,17 @@ import { useEffect, useState } from "react"
 import { deleteHabit } from "@/services/deleteHabit";
 import { updateHabitData } from "@/services/updateHabitData"
 import { updateHabitLoop } from "@/services/updateHabitLoop";
+import type { HabitHistory } from "@/db/schema";
 
-type HabitBodyProps = {
+export type HabitBodyProps = {
     id: number;
     title: string;
     color: string;
     description?: string | null;
     completed: boolean;
     streak: number;
+    createdAt: Date;
+    habitHistory: HabitHistory
     updateUI: () => void;
 };
 
@@ -22,6 +25,8 @@ export default function HabitBody({
     description,
     completed,
     streak,
+    createdAt,
+    habitHistory,
     updateUI
 }: HabitBodyProps) {
 
@@ -34,7 +39,6 @@ export default function HabitBody({
     const calendarLoop = async () => {
         const res = await updateHabitLoop(id);
         if (res.success) {
-            //setIsCompleted(Boolean(res.data))
             updateUI()
         } else if (!res.success) {
             // Error handling
@@ -47,9 +51,6 @@ export default function HabitBody({
         const res = await updateHabitData(id)
         console.log(res)
         if (res.success && typeof res.data === "object") {
-            //setCurrentStreak(res.data["streak"])
-            //setIsCompleted(res.data["completed"])
-            console.log("onMark updateUI")
             updateUI();
         } else if (!res.success) {
             //
@@ -68,6 +69,8 @@ export default function HabitBody({
                 description: description,
                 completed: String(completed),
                 streak: streak,
+                createdAt: createdAt.toISOString(),
+                habitHistory: JSON.stringify(habitHistory)
             }
         })
     }

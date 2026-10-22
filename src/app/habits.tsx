@@ -1,6 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import AddHabit from './components/AddHabit'
-import HabitDisplay from "./components/HabitDisplay";
+import HabitGallery from "./components/HabitGallery";
 
 import { useState } from "react";
 
@@ -13,7 +13,7 @@ export default function Habits() {
 
     return (
         <View style={styles.body}>
-            <HabitDisplay refreshKey={refreshKey} updateUI={refetchHabits} />
+            <HabitGallery refreshKey={refreshKey} updateUI={refetchHabits} />
             <AddHabit updateUI={refetchHabits} />
         </View>
     );

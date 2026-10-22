@@ -1,9 +1,18 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { deleteHabit } from "@/services/deleteHabit";
 import { updateHabit } from "@/services/updateHabit";
 import CreateHabit, { type HabitFormValues } from "./components/CreateHabit";
+import { getHabit } from "@/services/getHabit";
+import type { HabitHistory } from "@/db/schema";
+
+type HabitData = {
+    title: string;
+    description: string;
+    color: string;
+    habitHistory: HabitHistory;
+};
 
 type HabitOverviewParams = {
     id: string;
@@ -12,24 +21,28 @@ type HabitOverviewParams = {
     description?: string;
     completed: string;
     streak: string;
+    createdAt: string;
 };
 
 export default function HabitOverview() {
     const router = useRouter();
 
-    const { id, title, color, description, streak } = useLocalSearchParams<HabitOverviewParams>();
+    const { id, title, color, description, streak, createdAt } = useLocalSearchParams<HabitOverviewParams>();
 
     const [optionsActive, setOptionsActive] = useState(false)
     const [editingHabit, setEditingHabit] = useState(false)
-    const [habitData, setHabitData] = useState({
+    const [habitData, setHabitData] = useState<HabitData>({
         title: title ?? "",
         description: description ?? "",
         color: color ?? "#22d3ee",
+        habitHistory: {},
     })
+
+    const scrollRef = useRef<ScrollView>(null);
 
     const onUpdate = async ({ title, description, color }: HabitFormValues) => {
         const res = await updateHabit(Number(id), title, description, color);
-        if (res.success) setHabitData({ title, description, color });
+        if (res.success) setHabitData((prev) => ({ ...prev, title, description, color }));
         return res.success;
     }
 
@@ -38,7 +51,14 @@ export default function HabitOverview() {
         if (res.success) router.replace("/habits");
     }
 
+    const getHabitHistory = async (id: number) => {
+        const habit = await getHabit(id);
+        if (habit.success) setHabitData((prev) => ({ ...prev, habitHistory: habit.data.habitHistory }));
+    }
 
+    useEffect(() => {
+        getHabitHistory(Number(id))
+    }, [])
 
     return (<>
         <View className="flex-1 bg-[#000]">
@@ -108,7 +128,19 @@ export default function HabitOverview() {
                     </Text>
 
                     {/* Divider - placeholder for future content */}
-                    {/* <View className="h-px bg-white/10 mt-8" />   */}
+                    <View className="h-px bg-white/10 mt-8" />
+
+                    <Text>Completion Log</Text> 
+                    <ScrollView
+                        className="border-2 border-white h-16"
+                        ref={scrollRef}
+                        showsHorizontalScrollIndicator={false}
+                        horizontal
+                        onContentSizeChange={() => scrollRef.current?.scrollToEnd({animated: false})}
+                    >
+
+
+                    </ScrollView>
                 </ScrollView>
 
 
