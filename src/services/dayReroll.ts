@@ -14,29 +14,38 @@ export const updateHabitLoop = async (id: number): Promise<Result> => {
     if (!row) return { success: false, error: "Could not find a habit matching the id" }
 
     const difference = timeDifference(row.lastCompleted);
-    if (!difference) return { success: false, error: "timeDifference returned a falsy value. row.lastCompleted could be null." }
+    if (Number.isNaN(difference)) {
+        return { success: false, error: "row.lastCompleted is not a valid date." }
+    }
     console.log(`Days passed: ${difference}`)
     if (difference === 1) {
-        resetLoop(id, row)
-    }
-    if (difference >= 2) {
-        resetStreak(id)
+        await resetLoop(id, row)
+    } else if (difference >= 2) {
+        await resetStreak(id, row)
     }
     if (difference >= 1) return { success: true, data: "true" };
     else return { success: true, data: "false" };
 }
 
-const timeDifference = (lastCompleted: Date) => {
-    const getDate = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
-    const daysBetween = Math.round((getDate(new Date()).getTime() - getDate(lastCompleted).getTime()) / 864e5)
-    return daysBetween
-}
+const timeDifference = (lastCompleted: Date): number => {
+    if (Number.isNaN(lastCompleted.getTime())) return NaN;
+
+    const localDay = (d: Date) =>
+        Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
+
+    return Math.round((localDay(new Date()) - localDay(lastCompleted)) / 864e5);
+};
 
 const resetLoop = async (id: number, row: InferSelectModel<typeof habit>) => {
     await db.update(habit).set({ completed: false, prevLastCompletion: row.lastCompleted }).where(eq(habit.id, id))
 }
 
-const resetStreak = async (id: number) => {
-    const date = new Date()
-    await db.update(habit).set({ completed: false, streak: 0, lastCompleted: date, prevLastCompletion: date }).where(eq(habit.id, id))
+const resetStreak = async (id: number, row: InferSelectModel<typeof habit>) => {
+    // Missing history keys already mean "not completed", so there is no
+    // history to write here. Keep lastCompleted as the real last completion.
+    await db.update(habit).set({
+        completed: false,
+        streak: 0,
+        prevLastCompletion: row.lastCompleted,
+    }).where(eq(habit.id, id))
 }

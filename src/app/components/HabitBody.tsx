@@ -3,7 +3,7 @@ import { Pressable, View, Text } from "react-native";
 import { useEffect, useState } from "react"
 import { deleteHabit } from "@/services/deleteHabit";
 import { updateHabitData } from "@/services/updateHabitData"
-import { updateHabitLoop } from "@/services/updateHabitLoop";
+import { updateHabitLoop } from "@/services/dayReroll";
 import type { HabitHistory } from "@/db/schema";
 
 export type HabitBodyProps = {

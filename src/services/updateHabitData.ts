@@ -30,7 +30,7 @@ export const updateHabitData = async (id: number): Promise<Result> => {
     return { success: true, data: { streak: newStreak, completed: !row.completed } }
 }
 
-function localISODate(date = new Date()) {
+export function localISODate(date = new Date()) {
     const y = date.getFullYear();
     const m = String(date.getMonth() + 1).padStart(2, "0");
     const d = String(date.getDate()).padStart(2, "0");

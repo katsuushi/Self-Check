@@ -52,6 +52,7 @@ export default function HabitOverview() {
     }
 
     const getHabitHistory = async (id: number) => {
+        console.log("gettingHabitHistory")
         const habit = await getHabit(id);
         if (habit.success) setHabitData((prev) => ({ ...prev, habitHistory: habit.data.habitHistory }));
     }
@@ -128,15 +129,15 @@ export default function HabitOverview() {
                     </Text>
 
                     {/* Divider - placeholder for future content */}
-                    <View className="h-px bg-white/10 mt-8" />
+                    <View className="h-px bg-white/10 my-8" />
 
-                    <Text>Completion Log</Text> 
+                    <Text className="text-white text-2xl font-bold mb-4">Completion Log</Text>
                     <ScrollView
-                        className="border-2 border-white h-16"
+                        className="border-2 border-white h-40 grid grid-rows-7 grid-flow-col"
                         ref={scrollRef}
                         showsHorizontalScrollIndicator={false}
                         horizontal
-                        onContentSizeChange={() => scrollRef.current?.scrollToEnd({animated: false})}
+                        onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: false })}
                     >
 
 
