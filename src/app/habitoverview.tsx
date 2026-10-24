@@ -6,6 +6,11 @@ import { updateHabit } from "@/services/updateHabit";
 import CreateHabit, { type HabitFormValues } from "./components/CreateHabit";
 import { getHabit } from "@/services/getHabit";
 import type { HabitHistory } from "@/db/schema";
+import CalendarCell, {
+    CALENDAR_GAP,
+    CALENDAR_HEIGHT,
+    CALENDAR_ROWS,
+} from "./components/CalendarCell";
 
 type HabitData = {
     title: string;
@@ -27,7 +32,7 @@ type HabitOverviewParams = {
 export default function HabitOverview() {
     const router = useRouter();
 
-    const { id, title, color, description, streak, createdAt } = useLocalSearchParams<HabitOverviewParams>();
+    const { id, title, color, description, completed, streak, createdAt } = useLocalSearchParams<HabitOverviewParams>();
 
     const [optionsActive, setOptionsActive] = useState(false)
     const [editingHabit, setEditingHabit] = useState(false)
@@ -37,6 +42,7 @@ export default function HabitOverview() {
         color: color ?? "#22d3ee",
         habitHistory: {},
     })
+    const [cellDates, setCellDates] = useState<string[]>([])
 
     const scrollRef = useRef<ScrollView>(null);
 
@@ -54,11 +60,26 @@ export default function HabitOverview() {
     const getHabitHistory = async (id: number) => {
         console.log("gettingHabitHistory")
         const habit = await getHabit(id);
+        console.log(habit)
         if (habit.success) setHabitData((prev) => ({ ...prev, habitHistory: habit.data.habitHistory }));
     }
 
+    const isoDateRange = (start = new Date("2026-07-20"), end = new Date()) => {
+        const out: string[] = [];
+        const d = new Date(Date.UTC(start.getFullYear(), start.getMonth(), start.getDate()));
+        const last = new Date(Date.UTC(end.getFullYear(), end.getMonth(), end.getDate()));
+
+        while (d < last) {
+            out.push(d.toISOString().slice(0, 10));
+            d.setUTCDate(d.getUTCDate() + 1);
+        }
+        return out
+    }
+
+
     useEffect(() => {
         getHabitHistory(Number(id))
+        setCellDates(isoDateRange())
     }, [])
 
     return (<>
@@ -133,14 +154,28 @@ export default function HabitOverview() {
 
                     <Text className="text-white text-2xl font-bold mb-4">Completion Log</Text>
                     <ScrollView
-                        className="border-2 border-white h-40 grid grid-rows-7 grid-flow-col"
+                        className="border-white"
+                        style={{ height: CALENDAR_HEIGHT + 16 }}
+                        contentContainerStyle={{ padding: 0 }}
                         ref={scrollRef}
                         showsHorizontalScrollIndicator={false}
                         horizontal
                         onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: false })}
                     >
-
-
+                        <View className="min-w-[100%] ml-auto h-full border-2 items-end flex-wrap" style={{ flexDirection: "column", gap: CALENDAR_GAP }}>
+                            {cellDates.map((d, i) => (
+                                <View
+                                    key={i}
+                                    style={{ flexDirection: "column", gap: CALENDAR_GAP }}
+                                >
+                                    <CalendarCell
+                                        key={i}
+                                        date={d}
+                                        completed={d in habitData.habitHistory}
+                                    />
+                                </View>
+                            ))}
+                        </View>
                     </ScrollView>
                 </ScrollView>
 
