@@ -3,25 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ScrollView } from "react-native";
 import HabitBody from "./HabitBody";
 import { useFocusEffect } from "expo-router";
-import type { HabitHistory } from "@/db/schema";
-
-export type Habit = {
-    id: number;
-    title: string;
-    description: string | null;
-    color: string;
-    completed: boolean;
-    streak: number;
-    bestStreak: number;
-    lastCompleted: Date | null;
-    createdAt: Date;
-    habitHistory: HabitHistory;
-}
-
-type HabitDisplayProps = {
-    refreshKey: number;
-    updateUI: () => void;
-}
+import type { Habit, HabitDisplayProps } from "@/types";
 
 export default function HabitGallery(props: HabitDisplayProps) {
 

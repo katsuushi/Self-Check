@@ -1,22 +1,8 @@
 import { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
+import type { CreateHabitProps } from "@/types";
 
 const COLORS = ["#22d3ee", "#34d399", "#fbbf24", "#f87171", "#a78bfa", "#f472b6"];
-
-export type HabitFormValues = {
-    title: string;
-    description: string;
-    color: string;
-};
-
-type CreateHabitProps = {
-    isEditing?: boolean;
-    initialTitle?: string;
-    initialDescription?: string;
-    initialColor?: string;
-    onClose: () => void;
-    onSave: (values: HabitFormValues) => Promise<boolean> | boolean;
-};
 
 export default function CreateHabit({
     isEditing = false,

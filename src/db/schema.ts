@@ -1,7 +1,6 @@
 import { sqliteTable, integer, text } from "drizzle-orm/sqlite-core"
 import { sql } from "drizzle-orm"
-
-export type HabitHistory = Record<string, boolean>;
+import type { HabitHistory } from "@/types";
 
 export const habit = sqliteTable("habit", {
     id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),

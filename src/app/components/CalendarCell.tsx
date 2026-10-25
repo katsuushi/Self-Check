@@ -1,9 +1,5 @@
 import { View, Text } from "react-native";
-
-type CellData = {
-    date: string;
-    completed: boolean;
-}
+import type { CellData } from "@/types";
 
 export const CALENDAR_CELL_SIZE = 24;
 export const CALENDAR_GAP = 2;

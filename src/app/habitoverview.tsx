@@ -3,33 +3,17 @@ import { useEffect, useRef, useState } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import { deleteHabit } from "@/services/deleteHabit";
 import { updateHabit } from "@/services/editHabit";
-import CreateHabit, { type HabitFormValues } from "./components/CreateHabit";
+import CreateHabit from "./components/CreateHabit";
 import { getHabit } from "@/services/getHabit";
-import type { HabitHistory } from "@/db/schema";
+import type {
+    HabitData,
+    HabitFormValues,
+    HabitOverviewParams,
+} from "@/types";
 import CalendarCell, {
     CALENDAR_GAP,
     CALENDAR_HEIGHT,
 } from "./components/CalendarCell";
-
-type HabitData = {
-    title: string;
-    description: string;
-    color: string;
-    habitHistory: HabitHistory;
-    streak: number;
-    createdAt: Date;
-};
-
-type HabitOverviewParams = {
-    id: string;
-    title: string;
-    color: string;
-    description?: string;
-    completed: string;
-    streak: string;
-    bestStreak: string;
-    createdAt: string;
-};
 
 export default function HabitOverview() {
     const router = useRouter();

@@ -1,7 +1,7 @@
 import { db } from "../db/client"
 import { habit } from "@/db/schema"
 import { eq } from "drizzle-orm"
-import { Success } from "./types/types"
+import type { Success } from "@/types"
 
 export const deleteHabit = async (id: number): Promise<Success> => {
     console.log("a deleteHabit has been called!")

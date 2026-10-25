@@ -1,10 +1,8 @@
 import { eq } from "drizzle-orm"
 import { db } from "../db/client"
-import { ReturnData } from "./types/types"
+import type { HabitRow, ReturnData } from "@/types"
 import { habit } from "@/db/schema"
 import { normalizeHabitHistory } from "@/db/history"
-
-type HabitRow = typeof habit.$inferSelect;
 
 export const getHabit = async (id: number): Promise<ReturnData<HabitRow>> => {
     if (!id) return { success: false, error: "You haven't passed an id!" }

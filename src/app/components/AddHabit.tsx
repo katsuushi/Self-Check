@@ -2,10 +2,7 @@ import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import { createHabit } from "../../services/createHabit";
 import CreateHabit from "./CreateHabit";
-
-type AddHabitProps = {
-    updateUI: () => void; // Makes the habitDisplay component refetch the habits
-}
+import type { AddHabitProps } from "@/types";
 
 export default function AddHabit(props: AddHabitProps) {
     const [visible, setVisible] = useState(false);

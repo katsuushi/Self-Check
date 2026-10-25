@@ -1,6 +1,6 @@
 import { db } from "../db/client"
 import { habit } from "@/db/schema"
-import { Success } from "./types/types"
+import type { Success } from "@/types"
 
 export const createHabit = async (title: string, description: string, color: string): Promise<Success> => {
 

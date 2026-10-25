@@ -1,4 +1,4 @@
-import type { HabitHistory } from "./schema";
+import type { HabitHistory } from "@/types";
 
 // Converts legacy array-shaped history into the date -> boolean map.
 // Can delete but its too much to click D, 2, Enter

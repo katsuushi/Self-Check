@@ -2,7 +2,7 @@ import { db } from "../db/client"
 import { habit } from "@/db/schema"
 import { normalizeHabitHistory } from "@/db/history"
 import { eq } from "drizzle-orm"
-import { Result } from "./types/types"
+import type { Result } from "@/types"
 
 export const updateHabitData = async (id: number): Promise<Result> => {
     if (!id) return { success: false, error: "No id has been passed." }

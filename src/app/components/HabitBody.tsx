@@ -4,20 +4,7 @@ import { useEffect, useState } from "react"
 import { deleteHabit } from "@/services/deleteHabit";
 import { updateHabitData } from "@/services/updateHabitData"
 import { updateHabitLoop } from "@/services/dayReroll";
-import type { HabitHistory } from "@/db/schema";
-
-export type HabitBodyProps = {
-    id: number;
-    title: string;
-    color: string;
-    description?: string | null;
-    completed: boolean;
-    streak: number;
-    bestStreak: number;
-    createdAt: Date;
-    habitHistory: HabitHistory
-    updateUI: () => void;
-};
+import type { HabitBodyProps } from "@/types";
 
 export default function HabitBody({
     id,
