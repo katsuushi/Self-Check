@@ -1,0 +1,1 @@
+ALTER TABLE `habit` ADD `bestStreak` integer DEFAULT 0 NOT NULL;

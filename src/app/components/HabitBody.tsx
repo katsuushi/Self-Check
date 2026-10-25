@@ -13,6 +13,7 @@ export type HabitBodyProps = {
     description?: string | null;
     completed: boolean;
     streak: number;
+    bestStreak: number;
     createdAt: Date;
     habitHistory: HabitHistory
     updateUI: () => void;
@@ -25,6 +26,7 @@ export default function HabitBody({
     description,
     completed,
     streak,
+    bestStreak,
     createdAt,
     habitHistory,
     updateUI
@@ -69,6 +71,7 @@ export default function HabitBody({
                 description: description,
                 completed: String(completed),
                 streak: streak,
+                bestStreak: bestStreak,
                 createdAt: createdAt.toISOString(),
                 habitHistory: JSON.stringify(habitHistory)
             }

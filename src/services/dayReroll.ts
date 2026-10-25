@@ -17,7 +17,6 @@ export const updateHabitLoop = async (id: number): Promise<Result> => {
     if (Number.isNaN(difference)) {
         return { success: false, error: "row.lastCompleted is not a valid date." }
     }
-    console.log(`Days passed: ${difference}`)
     if (difference === 1) {
         await resetLoop(id, row)
     } else if (difference >= 2) {

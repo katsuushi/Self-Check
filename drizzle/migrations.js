@@ -11,6 +11,7 @@ import m0006 from './0006_curious_mother_askani.sql';
 import m0007 from './0007_complex_triton.sql';
 import m0008 from './0008_ambitious_doctor_octopus.sql';
 import m0009 from './0009_repair_habit_history.sql';
+import m0010 from './0010_careful_bromley.sql';
 
   export default {
     journal,
@@ -24,7 +25,8 @@ m0005,
 m0006,
 m0007,
 m0008,
-m0009
+m0009,
+m0010
     }
   }
   

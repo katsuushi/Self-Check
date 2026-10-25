@@ -12,6 +12,7 @@ export const habit = sqliteTable("habit", {
     lastCompleted: integer("lastCompleted", { mode: 'timestamp' }).notNull(),
     prevLastCompletion: integer({ mode: 'timestamp' }).notNull(),
     streak: integer({ mode: 'number' }).default(0).notNull(),
+    bestStreak: integer({mode: 'number'}).default(0).notNull(),
     createdAt: integer({ mode: 'timestamp' }).notNull(),
     habitHistory: text({ mode: "json" })
         .$type<HabitHistory>()

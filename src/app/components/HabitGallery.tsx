@@ -12,6 +12,7 @@ export type Habit = {
     color: string;
     completed: boolean;
     streak: number;
+    bestStreak: number;
     lastCompleted: Date | null;
     createdAt: Date;
     habitHistory: HabitHistory;
@@ -62,6 +63,7 @@ export default function HabitGallery(props: HabitDisplayProps) {
                     color={habit.color}
                     completed={habit.completed}
                     streak={habit.streak}
+                    bestStreak={habit.bestStreak}
                     createdAt={habit.createdAt}
                     habitHistory={habit.habitHistory}
                     updateUI={incrementRefreshKey}

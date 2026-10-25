@@ -1,15 +1,14 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import { deleteHabit } from "@/services/deleteHabit";
-import { updateHabit } from "@/services/updateHabit";
+import { updateHabit } from "@/services/editHabit";
 import CreateHabit, { type HabitFormValues } from "./components/CreateHabit";
 import { getHabit } from "@/services/getHabit";
 import type { HabitHistory } from "@/db/schema";
 import CalendarCell, {
     CALENDAR_GAP,
     CALENDAR_HEIGHT,
-    CALENDAR_ROWS,
 } from "./components/CalendarCell";
 
 type HabitData = {
@@ -17,6 +16,8 @@ type HabitData = {
     description: string;
     color: string;
     habitHistory: HabitHistory;
+    streak: number;
+    createdAt: Date;
 };
 
 type HabitOverviewParams = {
@@ -26,13 +27,14 @@ type HabitOverviewParams = {
     description?: string;
     completed: string;
     streak: string;
+    bestStreak: string;
     createdAt: string;
 };
 
 export default function HabitOverview() {
     const router = useRouter();
 
-    const { id, title, color, description, completed, streak, createdAt } = useLocalSearchParams<HabitOverviewParams>();
+    const { id, title, color, description, completed, streak, bestStreak, createdAt } = useLocalSearchParams<HabitOverviewParams>();
 
     const [optionsActive, setOptionsActive] = useState(false)
     const [editingHabit, setEditingHabit] = useState(false)
@@ -41,6 +43,8 @@ export default function HabitOverview() {
         description: description ?? "",
         color: color ?? "#22d3ee",
         habitHistory: {},
+        streak: Number(streak) || 0,
+        createdAt: createdAt ? new Date(createdAt) : new Date(),
     })
     const [cellDates, setCellDates] = useState<string[]>([])
 
@@ -61,7 +65,14 @@ export default function HabitOverview() {
         console.log("gettingHabitHistory")
         const habit = await getHabit(id);
         console.log(habit)
-        if (habit.success) setHabitData((prev) => ({ ...prev, habitHistory: habit.data.habitHistory }));
+        if (habit.success) {
+            setHabitData((prev) => ({
+                ...prev,
+                habitHistory: habit.data.habitHistory,
+                streak: habit.data.streak,
+                createdAt: habit.data.createdAt,
+            }));
+        }
     }
 
     const isoDateRange = (start = new Date("2026-07-20"), end = new Date()) => {
@@ -69,7 +80,7 @@ export default function HabitOverview() {
         const d = new Date(Date.UTC(start.getFullYear(), start.getMonth(), start.getDate()));
         const last = new Date(Date.UTC(end.getFullYear(), end.getMonth(), end.getDate()));
 
-        while (d < last) {
+        while (d <= last) {
             out.push(d.toISOString().slice(0, 10));
             d.setUTCDate(d.getUTCDate() + 1);
         }
@@ -82,9 +93,16 @@ export default function HabitOverview() {
         setCellDates(isoDateRange())
     }, [])
 
+    const createdOn = Number.isNaN(habitData.createdAt.getTime())
+        ? "—"
+        : habitData.createdAt.toLocaleDateString(undefined, {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+        });
+
     return (<>
         <View className="flex-1 bg-[#000]">
-            {/* Top bar */}
 
             <View className="w-full h-14 flex-row items-center justify-between px-4 bg-black">
                 <Pressable
@@ -137,19 +155,65 @@ export default function HabitOverview() {
 
                 <ScrollView className="px-8 mt-4" contentContainerStyle={{ paddingBottom: 32 }}>
 
-                    {/* Title and description */}
                     <Text className="text-4xl font-bold text-white mt-2">{habitData.title}</Text>
 
                     <Text className="text-xl mt-2" style={{ color: habitData.color }}>
                         {habitData.description}
                     </Text>
 
-                    {/* Current streak */}
-                    <Text className="text-xl font-bold text-white mt-8">
-                        Current Streak: {streak}
-                    </Text>
+                    <View className="flex-row justify-evenly items-center mt-8">
+                        <View className="flex-1 items-center">
+                            <View className="flex-row items-center gap-x-2">
+                                <Image
+                                    source={require("../../assets/images/fire.png")}
+                                    style={{ width: 24, height: 24 }}
+                                    resizeMode="contain"
+                                />
+                                <Text className="text-2xl font-bold text-white">
+                                    {habitData.streak}
+                                </Text>
+                            </View>
+                            <Text className="text-xs text-white/60 mt-1">
+                                Current Streak
+                            </Text>
+                        </View>
 
-                    {/* Divider - placeholder for future content */}
+                        <View className="flex-1 items-center">
+                            <View className="flex-row items-center gap-x-2">
+                                <Image
+                                    source={require("../../assets/images/medal.png")}
+                                    style={{ width: 24, height: 24 }}
+                                    resizeMode="contain"
+                                />
+                                <Text className="text-2xl font-bold text-white">
+                                    {bestStreak}
+                                </Text>
+                            </View>
+                            <Text className="text-xs text-white/60 mt-1">
+                                Best Streak
+                            </Text>
+                        </View>
+
+                        <View className="flex-1 items-center h-full">
+                            <View className="flex-row items-center gap-x-2">
+                                <Image
+                                    source={require("../../assets/images/calendar.png")}
+                                    style={{ width: 28, height: 28}}
+                                    resizeMode="contain"
+                                />
+                                <Text
+                                    className="text-xs font-bold text-white"
+                                    numberOfLines={1}
+                                >
+                                    {createdOn}
+                                </Text>
+                            </View>
+                            <Text className="text-xs text-white/60 mt-1">
+                                Created
+                            </Text>
+                        </View>
+                    </View>
+
                     <View className="h-px bg-white/10 my-8" />
 
                     <Text className="text-white text-2xl font-bold mb-4">Completion Log</Text>
@@ -171,7 +235,7 @@ export default function HabitOverview() {
                                     <CalendarCell
                                         key={i}
                                         date={d}
-                                        completed={d in habitData.habitHistory}
+                                        completed={d in habitData.habitHistory && habitData.habitHistory[d]}
                                     />
                                 </View>
                             ))}
