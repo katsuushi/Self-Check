@@ -2,7 +2,7 @@ import { useRouter } from "expo-router"
 import { Pressable, View, Text } from "react-native";
 import { useEffect, useState } from "react"
 import { deleteHabit } from "@/services/deleteHabit";
-import { updateHabitData } from "@/services/updateHabitData"
+import { onMarkHabit } from "@/services/onMarkHabit"
 import { updateHabitLoop } from "@/services/dayReroll";
 import type { HabitBodyProps } from "@/types";
 
@@ -37,7 +37,7 @@ export default function HabitBody({
     const onMark = async () => {
         // onMark - marking habit as completed / not completed
         console.log("calling onMark")
-        const res = await updateHabitData(id)
+        const res = await onMarkHabit(id)
         console.log(res)
         if (res.success && typeof res.data === "object") {
             updateUI();

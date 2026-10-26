@@ -4,7 +4,7 @@ import { normalizeHabitHistory } from "@/db/history"
 import { eq } from "drizzle-orm"
 import type { Result } from "@/types"
 
-export const updateHabitData = async (id: number): Promise<Result> => {
+export const onMarkHabit = async (id: number): Promise<Result> => {
     if (!id) return { success: false, error: "No id has been passed." }
     const [row] = await db.select().from(habit).where(eq(habit.id, id))
     let newStreak: number;

@@ -14,6 +14,7 @@ import CalendarCell, {
     CALENDAR_GAP,
     CALENDAR_HEIGHT,
 } from "./components/CalendarCell";
+import { editPastDay } from "@/services/editPastDay";
 
 export default function HabitOverview() {
     const router = useRouter();
@@ -28,6 +29,7 @@ export default function HabitOverview() {
         color: color ?? "#22d3ee",
         habitHistory: {},
         streak: Number(streak) || 0,
+        bestStreak: Number(bestStreak) || 0,
         createdAt: createdAt ? new Date(createdAt) : new Date(),
     })
     const [cellDates, setCellDates] = useState<string[]>([])
@@ -76,6 +78,23 @@ export default function HabitOverview() {
         getHabitHistory(Number(id))
         setCellDates(isoDateRange())
     }, [])
+
+    const updateCells = async (date: string, value: boolean) => {
+        const res = await editPastDay(Number(id), date, value)
+        if (res.success) {
+            setHabitData((prev) => ({
+                ...prev,
+                habitHistory: res.data.newHistory,
+                streak: res.data.newStreak,
+                bestStreak: res.data.newBestStreak
+            }))
+        }
+        else if (!res.success) {
+            console.log(res.error)
+        } else {
+            console.log("Something went wrong")
+        }
+    }
 
     const createdOn = Number.isNaN(habitData.createdAt.getTime())
         ? "—"
@@ -170,7 +189,7 @@ export default function HabitOverview() {
                                     resizeMode="contain"
                                 />
                                 <Text className="text-2xl font-bold text-white">
-                                    {bestStreak}
+                                    {habitData.bestStreak}
                                 </Text>
                             </View>
                             <Text className="text-xs text-white/60 mt-1">
@@ -220,6 +239,7 @@ export default function HabitOverview() {
                                         key={i}
                                         date={d}
                                         completed={d in habitData.habitHistory && habitData.habitHistory[d]}
+                                        onEditCell={updateCells}
                                     />
                                 </View>
                             ))}

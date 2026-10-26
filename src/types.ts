@@ -13,8 +13,13 @@ export type Success =
     | { success: false; error: string };
 
 export type Result =
-    | { success: true; data: string | Object }
+    | { success: true; data: Object | string}
     | { success: false; error: string };
+
+export type ReturnFromEditDay = 
+    | {success: true; data: {newStreak: number; newBestStreak: number; newHistory: HabitHistory}}
+    | {success: false; error: string}
+
 
 // Habit form / modals
 export type HabitFormValues = {
@@ -62,6 +67,7 @@ export type HabitData = {
     color: string;
     habitHistory: HabitHistory;
     streak: number;
+    bestStreak: number
     createdAt: Date;
 };
 
@@ -80,4 +86,11 @@ export type HabitOverviewParams = {
 export type CellData = {
     date: string;
     completed: boolean;
+    onEditCell: (date: string, value: boolean) => void;
 };
+
+
+export type NewStreaks = {
+    newStreak: number;
+    newBestStreak: number;
+}
