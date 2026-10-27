@@ -3,6 +3,7 @@ import { habit } from "@/db/schema"
 import { normalizeHabitHistory } from "@/db/history"
 import { eq } from "drizzle-orm"
 import type { Result } from "@/types"
+import { localISODate } from "@/app/helperfn"
 
 export const onMarkHabit = async (id: number): Promise<Result> => {
     if (!id) return { success: false, error: "No id has been passed." }
@@ -31,11 +32,4 @@ export const onMarkHabit = async (id: number): Promise<Result> => {
     await db.update(habit).set({ streak: newStreak, bestStreak: newBestStreak, completed: !row.completed, lastCompleted: newLastCompleted, habitHistory: history }).where(eq(habit.id, id))
 
     return { success: true, data: { streak: newStreak, completed: !row.completed } }
-}
-
-export function localISODate(date = new Date()) {
-    const y = date.getFullYear();
-    const m = String(date.getMonth() + 1).padStart(2, "0");
-    const d = String(date.getDate()).padStart(2, "0");
-    return `${y}-${m}-${d}`;
 }
