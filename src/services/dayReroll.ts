@@ -2,7 +2,7 @@ import { db } from "../db/client"
 import { habit } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import type { Result } from "@/types"
-import { resetLoop, resetStreak, timeDifference } from "@/app/helperfn"
+import { resetLoop, resetStreak, timeDifference } from "@/helperfn"
 
 // This function checks whether a calendar day has passed
 // Used for reseting the streak / setting the completion to false on a new day

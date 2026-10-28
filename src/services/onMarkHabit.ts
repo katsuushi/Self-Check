@@ -3,7 +3,7 @@ import { habit } from "@/db/schema"
 import { normalizeHabitHistory } from "@/db/history"
 import { eq } from "drizzle-orm"
 import type { Result } from "@/types"
-import { localISODate } from "@/app/helperfn"
+import { localISODate } from "@/helperfn"
 
 export const onMarkHabit = async (id: number): Promise<Result> => {
     if (!id) return { success: false, error: "No id has been passed." }

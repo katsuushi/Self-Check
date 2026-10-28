@@ -11,10 +11,12 @@ import type {
     HabitOverviewParams,
 } from "@/types";
 import CalendarCell, {
+    CALENDAR_CELL_SIZE,
     CALENDAR_GAP,
     CALENDAR_HEIGHT,
 } from "./components/CalendarCell";
 import { editPastDay } from "@/services/editPastDay";
+import { useFlagsStore } from "@/stores/habitData";
 
 export default function HabitOverview() {
     const router = useRouter();
@@ -27,13 +29,12 @@ export default function HabitOverview() {
         title: title ?? "",
         description: description ?? "",
         color: color ?? "#22d3ee",
-        habitHistory: {},
+        habitHistory: useFlagsStore((s) => s.flags),
         streak: Number(streak) || 0,
         bestStreak: Number(bestStreak) || 0,
         createdAt: createdAt ? new Date(createdAt) : new Date(),
     })
     const [cellDates, setCellDates] = useState<string[]>([])
-
     const scrollRef = useRef<ScrollView>(null);
 
     const onUpdate = async ({ title, description, color }: HabitFormValues) => {
@@ -75,7 +76,6 @@ export default function HabitOverview() {
 
 
     useEffect(() => {
-        getHabitHistory(Number(id))
         setCellDates(isoDateRange())
     }, [])
 
@@ -103,7 +103,6 @@ export default function HabitOverview() {
             month: "short",
             day: "numeric",
         });
-
     return (<>
         <View className="flex-1 bg-[#000]">
 
@@ -201,7 +200,7 @@ export default function HabitOverview() {
                             <View className="flex-row items-center gap-x-2">
                                 <Image
                                     source={require("../../assets/images/calendar.png")}
-                                    style={{ width: 28, height: 28}}
+                                    style={{ width: 28, height: 28 }}
                                     resizeMode="contain"
                                 />
                                 <Text
@@ -230,6 +229,8 @@ export default function HabitOverview() {
                         onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: false })}
                     >
                         <View className="min-w-[100%] ml-auto h-full border-2 items-end flex-wrap" style={{ flexDirection: "column", gap: CALENDAR_GAP }}>
+
+
                             {cellDates.map((d, i) => (
                                 <View
                                     key={i}

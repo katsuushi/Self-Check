@@ -5,6 +5,7 @@ import { deleteHabit } from "@/services/deleteHabit";
 import { onMarkHabit } from "@/services/onMarkHabit"
 import { updateHabitLoop } from "@/services/dayReroll";
 import type { HabitBodyProps } from "@/types";
+import { useFlagsStore } from "@/stores/habitData";
 
 export default function HabitBody({
     id,
@@ -49,6 +50,7 @@ export default function HabitBody({
     }
 
     const onOverview = () => {
+        useFlagsStore.getState().setFlags(habitHistory)
         router.push({
             pathname: '../habitoverview',
             params: {

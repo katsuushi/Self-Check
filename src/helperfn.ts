@@ -22,7 +22,7 @@ export const calculateNewStreak = (
     let foundCurrent = false;
     const start = createdAt.slice(0, 10)
     const date = new Date(Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()))
-    const today = date.toISOString().slice(0, 10)
+    const today = localISODate() 
     let isoDate: string;
     do {
         isoDate = date.toISOString().slice(0, 10)
