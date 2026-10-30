@@ -17,6 +17,7 @@ import CalendarCell, {
 } from "./components/CalendarCell";
 import { editPastDay } from "@/services/editPastDay";
 import { useFlagsStore } from "@/stores/habitData";
+import { localISODate } from "@/helperfn";
 
 export default function HabitOverview() {
     const router = useRouter();
@@ -62,7 +63,7 @@ export default function HabitOverview() {
         }
     }
 
-    const isoDateRange = (start = new Date("2026-07-20"), end = new Date()) => {
+    const isoDateRange = (start = new Date(createdAt), end = new Date()) => {
         const out: string[] = [];
         const d = new Date(Date.UTC(start.getFullYear(), start.getMonth(), start.getDate()));
         const last = new Date(Date.UTC(end.getFullYear(), end.getMonth(), end.getDate()));
