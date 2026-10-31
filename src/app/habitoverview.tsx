@@ -6,23 +6,22 @@ import { updateHabit } from "@/services/editHabit";
 import CreateHabit from "./components/CreateHabit";
 import { getHabit } from "@/services/getHabit";
 import type {
+    DayStatus,
     HabitData,
     HabitFormValues,
     HabitOverviewParams,
 } from "@/types";
 import CalendarCell, {
-    CALENDAR_CELL_SIZE,
     CALENDAR_GAP,
     CALENDAR_HEIGHT,
 } from "./components/CalendarCell";
 import { editPastDay } from "@/services/editPastDay";
 import { useFlagsStore } from "@/stores/habitData";
-import { localISODate } from "@/helperfn";
 
 export default function HabitOverview() {
     const router = useRouter();
 
-    const { id, title, color, description, completed, streak, bestStreak, createdAt } = useLocalSearchParams<HabitOverviewParams>();
+    const { id, title, color, description, streak, bestStreak, createdAt } = useLocalSearchParams<HabitOverviewParams>();
 
     const [optionsActive, setOptionsActive] = useState(false)
     const [editingHabit, setEditingHabit] = useState(false)
@@ -77,10 +76,10 @@ export default function HabitOverview() {
 
 
     useEffect(() => {
-        setCellDates(isoDateRange())
-    }, [])
+        setCellDates(isoDateRange(createdAt ? new Date(createdAt) : new Date()))
+    }, [createdAt])
 
-    const updateCells = async (date: string, value: boolean) => {
+    const updateCells = async (date: string, value: DayStatus) => {
         const res = await editPastDay(Number(id), date, value)
         if (res.success) {
             setHabitData((prev) => ({
@@ -95,6 +94,11 @@ export default function HabitOverview() {
         } else {
             console.log("Something went wrong")
         }
+    }
+
+    const getDayStatus = (date: string): DayStatus => {
+        if (!(date in habitData.habitHistory)) return 0;
+        return habitData.habitHistory[date] ? 1 : 2;
     }
 
     const createdOn = Number.isNaN(habitData.createdAt.getTime())
@@ -240,7 +244,7 @@ export default function HabitOverview() {
                                     <CalendarCell
                                         key={i}
                                         date={d}
-                                        completed={d in habitData.habitHistory && habitData.habitHistory[d]}
+                                        status={getDayStatus(d)}
                                         onEditCell={updateCells}
                                     />
                                 </View>

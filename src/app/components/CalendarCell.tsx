@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
-import type { CellData } from "@/types";
-import { editPastDay } from "@/services/editPastDay";
+import type { CellData, DayStatus } from "@/types";
 
 export const CALENDAR_CELL_SIZE = 24;
 export const CALENDAR_GAP = 2;
@@ -22,8 +21,14 @@ export default function CalendarCell(props: CellData) {
         })
         : props.date;
 
+    const statusLabel =
+        props.status === 1
+            ? "Completed"
+            : props.status === 2
+                ? "Skipped"
+                : "Not completed";
 
-    const editDay = (value: boolean) => {
+    const editDay = (value: DayStatus) => {
         props.onEditCell(props.date, value)
         setMenuOpen(false)
     }
@@ -33,11 +38,11 @@ export default function CalendarCell(props: CellData) {
             <Pressable
                 onPress={() => setMenuOpen(true)}
                 style={{ width: CALENDAR_CELL_SIZE, height: CALENDAR_CELL_SIZE }}
-                className={`rounded-sm items-center justify-center active:opacity-60 ${props.completed ? "bg-white" : "bg-black"}`}
+                className={`rounded-sm items-center justify-center active:opacity-60 ${props.status === 1 ? "bg-white" : props.status === 2 ? "bg-[#303030]" : "bg-black"}`}
                 accessibilityRole="button"
-                accessibilityLabel={`${dateLabel}, ${props.completed ? "completed" : "not completed"}`}
+                accessibilityLabel={`${dateLabel}, ${statusLabel}`}
             >
-                <Text className={`text-[9px] leading-none font-semibold ${props.completed ? "text-black" : "text-white"}`}>
+                <Text className={`text-[9px] leading-none font-semibold ${props.status === 1 ? "text-black" : "text-white"}`}>
                     {day[0] == "0" ? day.slice(-1) : day}
                 </Text>
             </Pressable>
@@ -60,13 +65,13 @@ export default function CalendarCell(props: CellData) {
                                 {dateLabel}
                             </Text>
                             <Text className="mt-1 text-center text-xs text-white/50">
-                                {props.completed ? "Completed" : "Not completed"}
+                                {statusLabel}
                             </Text>
 
                             <View className="mt-4 flex-row justify-evenly">
                                 <Pressable
-                                    onPress={() => editDay(true)}
-                                    className="h-14 w-14 items-center justify-center rounded-md"
+                                    onPress={() => editDay(1)}
+                                    className="h-14 w-14 items-center justify-center rounded-md active:bg-white/20"
                                     accessibilityRole="button"
                                     accessibilityLabel="Mark completed"
                                 >
@@ -74,7 +79,16 @@ export default function CalendarCell(props: CellData) {
                                 </Pressable>
 
                                 <Pressable
-                                    onPress={() => editDay(false)}
+                                    onPress={() => editDay(2)}
+                                    className="h-14 w-14 items-center justify-center rounded-md active:bg-white/20"
+                                    accessibilityRole="button"
+                                    accessibilityLabel="Skip day"
+                                >
+                                    <Text className="text-3xl font-bold text-white">—</Text>
+                                </Pressable>
+
+                                <Pressable
+                                    onPress={() => editDay(0)}
                                     className="h-14 w-14 items-center justify-center rounded-md active:bg-white/20"
                                     accessibilityRole="button"
                                     accessibilityLabel="Mark not completed"

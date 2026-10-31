@@ -13,9 +13,9 @@ export const updateHabitLoop = async (id: number): Promise<Result> => {
     const [row] = await db.select().from(habit).where(eq(habit.id, id))
     if (!row) return { success: false, error: "Could not find a habit matching the id" }
 
-    const difference = timeDifference(row.lastCompleted);
+    const difference = timeDifference(row.latestMark);
     if (Number.isNaN(difference)) {
-        return { success: false, error: "row.lastCompleted is not a valid date." }
+        return { success: false, error: "row.latestMark is not a valid date." }
     }
     if (difference === 1) {
         await resetLoop(id, row)

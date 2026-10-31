@@ -22,11 +22,13 @@ export const calculateNewStreak = (
     let foundCurrent = false;
     const start = createdAt.slice(0, 10)
     const date = new Date(Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()))
-    const today = localISODate() 
+    const today = localISODate()
     let isoDate: string;
     do {
         isoDate = date.toISOString().slice(0, 10)
-        if (isoDate in history) runStreak += 1
+        if (isoDate in history) {
+            if (history[isoDate]) runStreak += 1
+        }
         else {
             if (runStreak > newBestStreak) {
                 newBestStreak = runStreak
@@ -49,25 +51,25 @@ export const calculateNewStreak = (
     return { newStreak: currentStreak, newBestStreak: newBestStreak }
 }
 
-export const timeDifference = (lastCompleted: Date): number => {
-    if (Number.isNaN(lastCompleted.getTime())) return NaN;
+export const timeDifference = (latestMark: Date): number => {
+    if (Number.isNaN(latestMark.getTime())) return NaN;
 
     const localDay = (d: Date) =>
         Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
 
-    return Math.round((localDay(new Date()) - localDay(lastCompleted)) / 864e5);
+    return Math.round((localDay(new Date()) - localDay(latestMark)) / 864e5);
 };
 
 export const resetLoop = async (id: number, row: InferSelectModel<typeof habit>) => {
-    await db.update(habit).set({ completed: false, prevLastCompletion: row.lastCompleted }).where(eq(habit.id, id))
+    await db.update(habit).set({ completed: false, prevLatestMark: row.latestMark }).where(eq(habit.id, id))
 }
 
 export const resetStreak = async (id: number, row: InferSelectModel<typeof habit>) => {
     // Missing history keys already mean "not completed", so there is no
-    // history to write here. Keep lastCompleted as the real last completion.
+    // history to write here. Keep latestMark as the real last mark.
     await db.update(habit).set({
         completed: false,
         streak: 0,
-        prevLastCompletion: row.lastCompleted,
+        prevLatestMark: row.latestMark,
     }).where(eq(habit.id, id))
 }

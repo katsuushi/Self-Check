@@ -1,5 +1,7 @@
 // Database
+// true = completed, false = skipped, missing key = not completed
 export type HabitHistory = Record<string, boolean>;
+export type DayStatus = 0 | 1 | 2;
 export type HabitRow = typeof import("@/db/schema").habit.$inferSelect;
 export type Habit = HabitRow;
 
@@ -13,12 +15,12 @@ export type Success =
     | { success: false; error: string };
 
 export type Result =
-    | { success: true; data: Object | string}
+    | { success: true; data: Object | string }
     | { success: false; error: string };
 
-export type ReturnFromEditDay = 
-    | {success: true; data: {newStreak: number; newBestStreak: number; newHistory: HabitHistory}}
-    | {success: false; error: string}
+export type ReturnFromEditDay =
+    | { success: true; data: { newStreak: number; newBestStreak: number; newHistory: HabitHistory } }
+    | { success: false; error: string }
 
 
 // Habit form / modals
@@ -85,8 +87,8 @@ export type HabitOverviewParams = {
 // Calendar
 export type CellData = {
     date: string;
-    completed: boolean;
-    onEditCell: (date: string, value: boolean) => void;
+    status: DayStatus;
+    onEditCell: (date: string, status: DayStatus) => void;
 };
 
 

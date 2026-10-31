@@ -69,28 +69,31 @@ export default function HabitBody({
 
 
     return (
-        <View className="flex-row items-center justify-between gap-3 rounded-xl bg-black p-4 border-l-4" style={{ borderLeftColor: color }}>
-            <View className="flex-row gap-x-4 min-w-0">
-                <Text className="text-2xl font-semibold text-white text-center truncate">{title}</Text>
+        <>
+            <Pressable onPress={onOverview} className="z-50 absolute w-[75%] h-full "></Pressable>
+            <View className="flex-row items-center justify-between gap-3 rounded-xl bg-black p-4 border-l-4" style={{ borderLeftColor: color }}>
+                <View className="flex-row gap-x-4 min-w-0">
+                    <Text className="text-2xl font-semibold text-white text-center truncate">{title}</Text>
 
-                <Text className="text-2xl font-semibold text-white truncate">{streak}</Text>
+                    <Text className="text-2xl font-semibold text-white truncate">{streak}</Text>
+                </View>
+                <View pointerEvents="auto" className="z-99 flex-row items-center gap-2">
+                    <Pressable
+                        onPress={onMark}
+                        style={!completed ? { borderColor: color } : undefined}
+                        className={`w-10 h-10 rounded-full border-white flex items-center justify-center ${completed ? "bg-cyan-400 border-cyan-400" : ``
+                            }`}
+                        accessibilityLabel={completed ? "Mark incomplete" : "Mark complete"}
+                    >
+                        <View pointerEvents="none">
+                            <Text className="text-white text-xl font-bold">✓</Text>
+                        </View>
+                    </Pressable>
+                    <Pressable onPress={onOverview} className="z-99 w-10 rounded-full h-10 items-center justify-center active:bg-white/10" accessibilityLabel="Edit habit">
+                        <Text className="text-white/70 text-2xl ">...</Text>
+                    </Pressable>
+                </View>
             </View>
-            <View className="flex-row items-center gap-2">
-                <Pressable
-                    onPress={onMark}
-                    style={!completed ? { borderColor: color } : undefined}
-                    className={`w-10 h-10 rounded-full border-white flex items-center justify-center ${completed ? "bg-cyan-400 border-cyan-400" : ``
-                        }`}
-                    accessibilityLabel={completed ? "Mark incomplete" : "Mark complete"}
-                >
-                    <View pointerEvents="none">
-                        <Text className="text-white text-xl font-bold">✓</Text>
-                    </View>
-                </Pressable>
-                <Pressable onPress={onOverview} className="w-10 rounded-full h-10 items-center justify-center active:bg-white/10" accessibilityLabel="Edit habit">
-                    <Text className="text-white/70 text-2xl ">...</Text>
-                </Pressable>
-            </View>
-        </View>
+        </>
     );
 }
