@@ -21,7 +21,17 @@ import { useFlagsStore } from "@/stores/habitData";
 export default function HabitOverview() {
     const router = useRouter();
 
-    const { id, title, color, description, streak, bestStreak, createdAt } = useLocalSearchParams<HabitOverviewParams>();
+    const {
+        id,
+        title,
+        color,
+        description,
+        streak,
+        bestStreak,
+        habitType,
+        targetGoal,
+        createdAt,
+    } = useLocalSearchParams<HabitOverviewParams>();
 
     const [optionsActive, setOptionsActive] = useState(false)
     const [editingHabit, setEditingHabit] = useState(false)
@@ -29,6 +39,8 @@ export default function HabitOverview() {
         title: title ?? "",
         description: description ?? "",
         color: color ?? "#22d3ee",
+        habitType: habitType === "measurable" ? "measurable" : "yesNo",
+        targetGoal: Number(targetGoal) || 0,
         habitHistory: useFlagsStore((s) => s.flags),
         streak: Number(streak) || 0,
         bestStreak: Number(bestStreak) || 0,
@@ -37,9 +49,31 @@ export default function HabitOverview() {
     const [cellDates, setCellDates] = useState<string[]>([])
     const scrollRef = useRef<ScrollView>(null);
 
-    const onUpdate = async ({ title, description, color }: HabitFormValues) => {
-        const res = await updateHabit(Number(id), title, description, color);
-        if (res.success) setHabitData((prev) => ({ ...prev, title, description, color }));
+    const onUpdate = async ({
+        title,
+        description,
+        color,
+        habitType,
+        targetGoal,
+    }: HabitFormValues) => {
+        const res = await updateHabit(
+            Number(id),
+            title,
+            description,
+            color,
+            habitType,
+            targetGoal
+        );
+        if (res.success) {
+            setHabitData((prev) => ({
+                ...prev,
+                title,
+                description,
+                color,
+                habitType,
+                targetGoal,
+            }));
+        }
         return res.success;
     }
 
@@ -56,6 +90,8 @@ export default function HabitOverview() {
             setHabitData((prev) => ({
                 ...prev,
                 habitHistory: habit.data.habitHistory,
+                habitType: habit.data.habitType,
+                targetGoal: habit.data.targetGoal,
                 streak: habit.data.streak,
                 createdAt: habit.data.createdAt,
             }));
@@ -263,6 +299,8 @@ export default function HabitOverview() {
                     initialTitle={habitData.title}
                     initialDescription={habitData.description}
                     initialColor={habitData.color}
+                    initialType={habitData.habitType}
+                    initialTarget={habitData.targetGoal}
                     onClose={() => setEditingHabit(false)}
                     onSave={onUpdate}
                 />

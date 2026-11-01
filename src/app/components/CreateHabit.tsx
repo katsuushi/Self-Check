@@ -1,26 +1,39 @@
 import { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
-import type { CreateHabitProps } from "@/types";
-
-const COLORS = ["#22d3ee", "#34d399", "#fbbf24", "#f87171", "#a78bfa", "#f472b6"];
+import ColorPicker, { DEFAULT_COLOR } from "./ColorPicker";
+import HabitTypeSelect, { DEFAULT_HABIT_TYPE } from "./HabitTypeSelect";
+import type { CreateHabitProps, HabitType } from "@/types";
 
 export default function CreateHabit({
     isEditing = false,
     initialTitle = "",
     initialDescription = "",
-    initialColor = COLORS[0],
+    initialColor = DEFAULT_COLOR,
+    initialType = DEFAULT_HABIT_TYPE,
+    initialTarget = 0,
     onClose,
     onSave,
 }: CreateHabitProps) {
     const [title, setTitle] = useState(initialTitle);
     const [description, setDescription] = useState(initialDescription);
     const [color, setColor] = useState(initialColor);
+    const [habitType, setHabitType] = useState<HabitType>(
+        initialType === "measurable" ? "measurable" : DEFAULT_HABIT_TYPE
+    );
+    const [target, setTarget] = useState(initialTarget ? String(initialTarget) : "");
 
     const canSave = title.trim().length > 0;
 
     const save = async () => {
         if (!canSave) return;
-        const success = await onSave({ title, description, color });
+        const targetGoal = Number(target) || 0;
+        const success = await onSave({
+            title,
+            description,
+            color,
+            habitType,
+            targetGoal,
+        });
         if (success) onClose();
     };
 
@@ -50,46 +63,62 @@ export default function CreateHabit({
                     </Pressable>
                 </View>
 
-                <Text className="text-xs text-white/50 font-bold uppercase mt-5 mb-1">
-                    Habit Title
-                </Text>
-                <TextInput
-                    value={title}
-                    onChangeText={setTitle}
-                    placeholder="e.g. Drink water"
-                    placeholderTextColor="#6b7280"
-                    className="rounded-xl bg-[#000] px-4 py-3 text-base text-white"
-                />
+                <View className="mt-5 flex-row gap-4">
+                    <View className="flex-1">
+                        <Text className="text-xs text-white/90 font-bold uppercase mb-2">
+                            Habit Title
+                        </Text>
+                        <TextInput
+                            value={title}
+                            onChangeText={setTitle}
+                            placeholder="e.g. Drink water"
+                            placeholderTextColor="#6b7280"
+                            className="h-14 rounded-xl bg-[#000] px-4 py-4 text-base text-white"
+                        />
+                    </View>
 
-                <Text className="text-xs text-white/50 font-bold uppercase mt-4 mb-1">
+                    <View className="w-16">
+                        <ColorPicker value={color} onChange={setColor} />
+                    </View>
+                </View>
+
+
+                <Text className="text-xs text-white/90 font-bold uppercase mt-4 mb-2">
                     Description
                 </Text>
                 <TextInput
                     value={description}
                     onChangeText={setDescription}
-                    placeholder="Why does this habit matter?"
+                    placeholder="..."
                     placeholderTextColor="#6b7280"
                     multiline
                     textAlignVertical="top"
                     className="h-28 rounded-xl bg-[#000] px-4 py-3 text-base text-white"
                 />
 
-                <Text className="text-xs text-white/50 font-bold uppercase mt-4 mb-2">
-                    Color
-                </Text>
-                <View className="flex-row flex-wrap gap-3">
-                    {COLORS.map((c) => (
-                        <Pressable
-                            key={c}
-                            onPress={() => setColor(c)}
-                            style={{ backgroundColor: c }}
-                            className={
-                                color === c
-                                    ? "h-9 w-9 rounded-full border-2 border-white"
-                                    : "h-9 w-9 rounded-full border-2 border-transparent"
-                            }
-                        />
-                    ))}
+
+                <View className="mt-4 flex-row gap-4">
+                    <View className="flex-1">
+                        <HabitTypeSelect value={habitType} onChange={setHabitType} />
+                    </View>
+
+                    {habitType === "measurable" && (
+                        <View className="w-24">
+                            <Text className="text-xs text-white/90 font-bold uppercase mb-2">
+                                Target
+                            </Text>
+                            <TextInput
+                                value={target}
+                                onChangeText={(text) =>
+                                    setTarget(text.replace(/[^0-9.]/g, ""))
+                                }
+                                placeholder="25, 32"
+                                placeholderTextColor="#6b7280"
+                                keyboardType="decimal-pad"
+                                className="h-14 rounded-xl bg-[#000] px-4 text-base text-white"
+                            />
+                        </View>
+                    )}
                 </View>
             </View>
         </View>

@@ -15,6 +15,8 @@ export default function HabitBody({
     completed,
     streak,
     bestStreak,
+    habitType,
+    targetGoal,
     createdAt,
     habitHistory,
     updateUI
@@ -61,6 +63,8 @@ export default function HabitBody({
                 completed: String(completed),
                 streak: streak,
                 bestStreak: bestStreak,
+                habitType: habitType,
+                targetGoal: String(targetGoal),
                 createdAt: createdAt.toISOString(),
                 habitHistory: JSON.stringify(habitHistory)
             }

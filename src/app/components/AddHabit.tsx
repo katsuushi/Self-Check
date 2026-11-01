@@ -28,8 +28,14 @@ export default function AddHabit(props: AddHabitProps) {
     return (
         <CreateHabit
             onClose={() => setVisible(false)}
-            onSave={async ({ title, description, color }) => {
-                const res = await createHabit(title, description, color);
+            onSave={async ({ title, description, color, habitType, targetGoal }) => {
+                const res = await createHabit(
+                    title,
+                    description,
+                    color,
+                    habitType,
+                    targetGoal
+                );
                 if (res.success) {
                     props.updateUI();
                     return true;

@@ -46,6 +46,8 @@ export default function HabitGallery(props: HabitDisplayProps) {
                     completed={habit.completed}
                     streak={habit.streak}
                     bestStreak={habit.bestStreak}
+                    habitType={habit.habitType}
+                    targetGoal={habit.targetGoal}
                     createdAt={habit.createdAt}
                     habitHistory={habit.habitHistory}
                     updateUI={incrementRefreshKey}

@@ -1,4 +1,4 @@
-import { sqliteTable, integer, text } from "drizzle-orm/sqlite-core"
+import { sqliteTable, integer, text, real } from "drizzle-orm/sqlite-core"
 import { sql } from "drizzle-orm"
 import type { HabitHistory } from "@/types";
 
@@ -7,11 +7,13 @@ export const habit = sqliteTable("habit", {
     title: text("title").notNull(),
     description: text("description"),
     color: text("color").notNull(),
+    habitType: text({ enum: ["yesNo", "measurable"] }).notNull().default("yesNo"),
+    targetGoal: real("targetGoal").default(0).notNull(),
     completed: integer("done", { mode: 'boolean' }).notNull().default(false),
     latestMark: integer("latestMark", { mode: 'timestamp' }).notNull(),
     prevLatestMark: integer({ mode: 'timestamp' }).notNull(),
     streak: integer({ mode: 'number' }).default(0).notNull(),
-    bestStreak: integer({mode: 'number'}).default(0).notNull(),
+    bestStreak: integer({ mode: 'number' }).default(0).notNull(),
     createdAt: integer({ mode: 'timestamp' }).notNull(),
     habitHistory: text({ mode: "json" })
         .$type<HabitHistory>()
