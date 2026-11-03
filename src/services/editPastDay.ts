@@ -29,7 +29,7 @@ export const editPastDay = async (id: number, date: string, value: DayStatus, am
         newLatestMark = row.prevLatestMark
     }
 
-    const newStreaks = calculateNewStreak(newHistory, row.createdAt.toISOString())
+    const newStreaks = calculateNewStreak(newHistory, row.createdAt.toISOString(), (row.habitType === "measurable" && row.targetGoal))
 
     await db.update(habit).set({ completed: newCompleted, latestMark: newLatestMark, streak: newStreaks.newStreak, bestStreak: newStreaks.newBestStreak, habitHistory: newHistory }).where(eq(habit.id, id))
     console.log(`newStreak: ${newStreaks.newStreak}`)
