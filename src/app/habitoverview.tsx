@@ -15,6 +15,7 @@ import CalendarCell, {
     CALENDAR_GAP,
     CALENDAR_HEIGHT,
 } from "./components/CalendarCell";
+import MeasurableMarkMenu from "./components/MeasurableMarkMenu";
 import { editPastDay } from "@/services/editPastDay";
 import { useFlagsStore } from "@/stores/habitData";
 
@@ -35,6 +36,7 @@ export default function HabitOverview() {
 
     const [optionsActive, setOptionsActive] = useState(false)
     const [editingHabit, setEditingHabit] = useState(false)
+    const [measurableDate, setMeasurableDate] = useState<string | null>(null)
     const [habitData, setHabitData] = useState<HabitData>({
         title: title ?? "",
         description: description ?? "",
@@ -83,9 +85,7 @@ export default function HabitOverview() {
     }
 
     const getHabitHistory = async (id: number) => {
-        console.log("gettingHabitHistory")
         const habit = await getHabit(id);
-        console.log(habit)
         if (habit.success) {
             setHabitData((prev) => ({
                 ...prev,
@@ -115,8 +115,8 @@ export default function HabitOverview() {
         setCellDates(isoDateRange(createdAt ? new Date(createdAt) : new Date()))
     }, [createdAt])
 
-    const updateCells = async (date: string, value: DayStatus) => {
-        const res = await editPastDay(Number(id), date, value)
+    const updateCells = async (date: string, value: DayStatus, amount?: number) => {
+        const res = await editPastDay(Number(id), date, value, amount)
         if (res.success) {
             setHabitData((prev) => ({
                 ...prev,
@@ -124,6 +124,7 @@ export default function HabitOverview() {
                 streak: res.data.newStreak,
                 bestStreak: res.data.newBestStreak
             }))
+            setMeasurableDate(null)
         }
         else if (!res.success) {
             console.log(res.error)
@@ -134,7 +135,17 @@ export default function HabitOverview() {
 
     const getDayStatus = (date: string): DayStatus => {
         if (!(date in habitData.habitHistory)) return 0;
-        return habitData.habitHistory[date] ? 1 : 2;
+        else {
+            const value = habitData.habitHistory[date]
+            if (value === true || typeof value !== "boolean" && value >= Number(targetGoal)) return 1;
+            else if (value === false) return 2;
+            else return 0;
+        }
+    }
+
+    const getMeasurableAmount = (date: string) => {
+        const value = habitData.habitHistory[date];
+        return typeof value === "number" && Number.isFinite(value) && value > 0 ? value : undefined;
     }
 
     const createdOn = Number.isNaN(habitData.createdAt.getTime())
@@ -282,6 +293,11 @@ export default function HabitOverview() {
                                         date={d}
                                         status={getDayStatus(d)}
                                         onEditCell={updateCells}
+                                        onPressCell={
+                                            habitData.habitType === "measurable"
+                                                ? (date) => setMeasurableDate(date)
+                                                : undefined
+                                        }
                                     />
                                 </View>
                             ))}
@@ -303,6 +319,16 @@ export default function HabitOverview() {
                     initialTarget={habitData.targetGoal}
                     onClose={() => setEditingHabit(false)}
                     onSave={onUpdate}
+                />
+            )}
+
+            {measurableDate && (
+                <MeasurableMarkMenu
+                    title={habitData.title}
+                    targetGoal={habitData.targetGoal}
+                    initialAmount={getMeasurableAmount(measurableDate)}
+                    onClose={() => setMeasurableDate(null)}
+                    onSubmit={(value, amount) => updateCells(measurableDate, value, amount)}
                 />
             )}
 

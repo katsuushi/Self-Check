@@ -27,7 +27,7 @@ export default function HabitBody({
     const router = useRouter();
     const [markMenuOpen, setMarkMenuOpen] = useState(false);
     const todayHistoryValue = habitHistory[localISODate()];
-    const initialMeasurableAmount = typeof todayHistoryValue === "number" && todayHistoryValue > 0
+    const initialMeasurableAmount = typeof todayHistoryValue === "number" && Number.isFinite(todayHistoryValue) && todayHistoryValue > 0
         ? todayHistoryValue
         : undefined;
 
@@ -77,6 +77,7 @@ export default function HabitBody({
     }
 
     const onOverview = () => {
+        console.log("clicking on ", title)
         useFlagsStore.getState().setFlags(habitHistory)
         router.push({
             pathname: '../habitoverview',
@@ -99,7 +100,7 @@ export default function HabitBody({
 
     return (
         <>
-            <Pressable onPress={onOverview} className="z-50 absolute w-[75%] h-full "></Pressable>
+            <Pressable onPress={onOverview} className="z-50 opacity-0 absolute w-[75%] h-full"></Pressable>
             <View className="flex-row items-center justify-between gap-3 rounded-xl bg-black p-4 border-l-4" style={{ borderLeftColor: color }}>
                 <View className="flex-row gap-x-4 min-w-0">
                     <Text className="text-2xl font-semibold text-white text-center truncate">{title}</Text>

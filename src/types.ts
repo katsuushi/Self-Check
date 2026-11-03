@@ -121,6 +121,7 @@ export type CellData = {
     date: string;
     status: DayStatus;
     onEditCell: (date: string, status: DayStatus) => void;
+    onPressCell?: (date: string) => void;
 };
 
 

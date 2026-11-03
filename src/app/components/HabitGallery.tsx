@@ -1,6 +1,6 @@
 import { listHabits } from "@/services/listHabits";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, View } from "react-native";
 import HabitBody from "./HabitBody";
 import { useFocusEffect } from "expo-router";
 import type { Habit, HabitDisplayProps } from "@/types";
@@ -35,23 +35,25 @@ export default function HabitGallery(props: HabitDisplayProps) {
     }, [props.refreshKey])
 
     return (
-        <ScrollView className="p-4" contentContainerStyle={{ gap: 12 }}>
+        <ScrollView className="p-4 border-2 border-white" contentContainerStyle={{ gap: 12 }}>
             {habits.map(habit => (
-                <HabitBody
-                    key={habit.id}
-                    id={habit.id}
-                    title={habit.title}
-                    description={habit.description ?? undefined}
-                    color={habit.color}
-                    completed={habit.completed}
-                    streak={habit.streak}
-                    bestStreak={habit.bestStreak}
-                    habitType={habit.habitType}
-                    targetGoal={habit.targetGoal}
-                    createdAt={habit.createdAt}
-                    habitHistory={habit.habitHistory}
-                    updateUI={incrementRefreshKey}
-                />
+                <View key={habit.id} className="border-4 border-white bg-[#FF0000]">
+                    <HabitBody
+                        key={habit.id}
+                        id={habit.id}
+                        title={habit.title}
+                        description={habit.description ?? undefined}
+                        color={habit.color}
+                        completed={habit.completed}
+                        streak={habit.streak}
+                        bestStreak={habit.bestStreak}
+                        habitType={habit.habitType}
+                        targetGoal={habit.targetGoal}
+                        createdAt={habit.createdAt}
+                        habitHistory={habit.habitHistory}
+                        updateUI={incrementRefreshKey}
+                    />
+                </View>
             ))}
         </ScrollView>
     )

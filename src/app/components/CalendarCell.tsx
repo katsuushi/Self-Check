@@ -33,10 +33,18 @@ export default function CalendarCell(props: CellData) {
         setMenuOpen(false)
     }
 
+    const handlePress = () => {
+        if (props.onPressCell) {
+            props.onPressCell(props.date)
+            return
+        }
+        setMenuOpen(true)
+    }
+
     return (
         <>
             <Pressable
-                onPress={() => setMenuOpen(true)}
+                onPress={handlePress}
                 style={{ width: CALENDAR_CELL_SIZE, height: CALENDAR_CELL_SIZE }}
                 className={`rounded-sm items-center justify-center active:opacity-60 ${props.status === 1 ? "bg-white" : props.status === 2 ? "bg-[#303030]" : "bg-black"}`}
                 accessibilityRole="button"
@@ -47,7 +55,7 @@ export default function CalendarCell(props: CellData) {
                 </Text>
             </Pressable>
 
-            {menuOpen && (
+            {menuOpen && !props.onPressCell && (
                 <Modal
                     visible
                     transparent

@@ -10,16 +10,25 @@ export const editPastDay = async (id: number, date: string, value: DayStatus, am
     if (value !== 0 && value !== 1 && value !== 2) return { success: false, error: "The value parameter is invalid." }
     const [row] = await db.select().from(habit).where(eq(habit.id, id));
     if (!row) return { success: false, error: "No habit found with the requested id." }
-    const newHistory = applyHistoryValue(row.habitHistory, value, date);
-    // Measurable habits keep the entered amount as the value for that day.
-    if (row.habitType === "measurable" && value === 1 && amount !== undefined && Number.isFinite(amount) && amount > 0) {
-        newHistory[date] = amount;
-    }
+    // Measurable habits keep a positive finite amount as the value for that day.
+    const amountToStore =
+        row.habitType === "measurable" &&
+            value === 1 &&
+            amount !== undefined &&
+            Number.isFinite(amount) &&
+            amount > 0
+            ? amount
+            : undefined;
+    const newHistory = applyHistoryValue(row.habitHistory, value, amountToStore, date);
     const today = localISODate()
-    const newCompleted = date === today ? value === 1 : row.completed;
-
-    console.log(value)
-
+    let newCompleted = false;
+    if (date === today && value === 1) {
+        if (!amount) {
+            newCompleted = true;
+        } else if (amount >= row.targetGoal) {
+            newCompleted = true;
+        }
+    }
     const latestMarkDate = Object.keys(newHistory).sort().at(-1)
     let newLatestMark: Date;
     if (latestMarkDate) {

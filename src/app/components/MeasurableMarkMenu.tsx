@@ -10,7 +10,9 @@ export default function MeasurableMarkMenu({
     onSubmit,
 }: MeasurableMarkMenuProps) {
     const [measureValue, setMeasureValue] = useState(
-        initialAmount !== undefined && initialAmount > 0 ? String(initialAmount) : ""
+        initialAmount !== undefined && Number.isFinite(initialAmount) && initialAmount > 0
+            ? String(initialAmount)
+            : ""
     );
     const trimmedMeasureValue = measureValue.trim();
     const parsedMeasureValue = Number(trimmedMeasureValue);
