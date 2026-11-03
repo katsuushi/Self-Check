@@ -11,6 +11,24 @@ export function localISODate(date = new Date()) {
     return `${y}-${m}-${d}`;
 }
 
+export const applyHistoryValue = (
+    habitHistory: HabitHistory,
+    value: number,
+    isoDate = localISODate()
+): HabitHistory => {
+    const history = { ...habitHistory };
+
+    if (value === 1) {
+        history[isoDate] = true;
+    } else if (value === 0 && isoDate in history) {
+        delete history[isoDate];
+    } else {
+        history[isoDate] = false;
+    }
+
+    return history;
+}
+
 export const calculateNewStreak = (
     history: HabitHistory,
     createdAt: string,

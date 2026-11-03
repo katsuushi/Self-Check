@@ -2,34 +2,38 @@ import { db } from "../db/client"
 import { habit } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import type { Result } from "@/types"
-import { calculateNewStreak, localISODate } from "@/helperfn"
+import { applyHistoryValue, calculateNewStreak } from "@/helperfn"
 
-export const onMarkHabit = async (id: number): Promise<Result> => {
+export const onMarkHabit = async (id: number, value: 0 | 1): Promise<Result> => {
     if (!id) return { success: false, error: "No id has been passed." }
+    if (value !== 0 && value !== 1) return { success: false, error: "The value parameter is invalid." }
+
     const [row] = await db.select().from(habit).where(eq(habit.id, id))
-    let newStreak: number = row.streak;
-    let newLatestMark: Date;
-    const currentDate = new Date();
-    const isoDate: string = localISODate();
-    let newBestStreak: number = row.bestStreak;
     if (!row) return { success: false, error: "Could not find the habit" }
 
-    const history = { ...row.habitHistory };
+    let newStreak: number = row.streak;
+    let newBestStreak: number = row.bestStreak;
+    let newLatestMark: Date;
+    const history = applyHistoryValue(row.habitHistory, value);
 
-    if (row.completed) {
+    if (value === 0) {
         newLatestMark = row.prevLatestMark
-        delete history[isoDate]
         const newStreaks = calculateNewStreak(history, row.createdAt.toISOString())
         newBestStreak = newStreaks.newBestStreak
         newStreak = newStreaks.newStreak
-
     } else {
         newStreak = row.streak + 1
         if (row.bestStreak < newStreak) newBestStreak += 1
-        newLatestMark = currentDate
-        history[isoDate] = true
+        newLatestMark = new Date()
     }
-    await db.update(habit).set({ streak: newStreak, bestStreak: newBestStreak, completed: !row.completed, latestMark: newLatestMark, habitHistory: history }).where(eq(habit.id, id))
 
-    return { success: true, data: { streak: newStreak, completed: !row.completed } }
+    await db.update(habit).set({
+        streak: newStreak,
+        bestStreak: newBestStreak,
+        completed: value === 1,
+        latestMark: newLatestMark,
+        habitHistory: history
+    }).where(eq(habit.id, id))
+
+    return { success: true, data: { streak: newStreak, completed: value === 1 } }
 }

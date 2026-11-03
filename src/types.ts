@@ -1,5 +1,5 @@
 // Database
-// true = completed, false = skipped, missing key = not completed
+// true = completed, false = skipped, number = measurable value, missing key = not completed
 export type HabitHistory = Record<string, HabitHistoryValue>;
 export type HabitHistoryValue = boolean | number;
 export type DayStatus = 0 | 1 | 2;
@@ -55,6 +55,14 @@ export type HabitTypeSelectProps = {
     value: HabitType;
     onChange: (value: HabitType) => void;
     label?: string;
+};
+
+export type MeasurableMarkMenuProps = {
+    title: string;
+    targetGoal: number;
+    initialAmount?: number;
+    onClose: () => void;
+    onSubmit: (value: DayStatus, amount?: number) => void | Promise<void>;
 };
 
 export type AddHabitProps = {
