@@ -102,10 +102,10 @@ export default function HabitBody({
         <>
             <Pressable onPress={onOverview} className="z-50 opacity-0 absolute w-[75%] h-full"></Pressable>
             <View className="flex-row items-center justify-between gap-3 rounded-xl bg-black p-4 border-l-4" style={{ borderLeftColor: color }}>
-                <View className="flex-row gap-x-4 min-w-0">
-                    <Text className="text-2xl font-semibold text-white text-center truncate">{title}</Text>
+                <View className="flex-row gap-x-4 min-w-0 items-center">
+                    <Text className="text-2xl font-semibold text-white text-center line-clamp-1 max-w-[55vw]">{title}</Text>
 
-                    <Text className="text-2xl font-semibold text-white truncate">{streak}</Text>
+                    <Text className="text-2xl font-semibold text-white truncate text-center">{streak}</Text>
                 </View>
                 <View pointerEvents="auto" className="z-99 flex-row items-center gap-2">
                     <Pressable

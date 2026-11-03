@@ -22,7 +22,7 @@ export default function CreateHabit({
     );
     const [target, setTarget] = useState(initialTarget ? String(initialTarget) : "");
 
-    const canSave = title.trim().length > 0;
+    const canSave = title.trim().length > 0 && (habitType !== "measurable" || Number(target) !== 0);
 
     const save = async () => {
         if (!canSave) return;

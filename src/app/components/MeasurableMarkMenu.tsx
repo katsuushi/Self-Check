@@ -14,13 +14,23 @@ export default function MeasurableMarkMenu({
             ? String(initialAmount)
             : ""
     );
+    const [numErrorMessage, setNumErrorMessage] = useState(false)
+    const [charErrorMessage, setCharErrorMessage] = useState(false)
     const trimmedMeasureValue = measureValue.trim();
     const parsedMeasureValue = Number(trimmedMeasureValue);
     const isMeasureValueValid =
         trimmedMeasureValue === "" || (Number.isFinite(parsedMeasureValue) && parsedMeasureValue > 0);
 
     const submit = async (value: DayStatus) => {
-        if (value === 1 && !isMeasureValueValid) return;
+        if (value === 1 && !isMeasureValueValid) {
+            setCharErrorMessage(true)
+        }
+        if (value === 1 && Number(measureValue) <= 0) {
+            setNumErrorMessage(true);
+            return;
+        }
+        setNumErrorMessage(false)
+        setCharErrorMessage(false)
         const amount = value === 1 && trimmedMeasureValue !== ""
             ? parsedMeasureValue
             : undefined;
@@ -62,6 +72,13 @@ export default function MeasurableMarkMenu({
                         accessibilityLabel="Measurable value"
                         className="mt-3 rounded-lg border border-white/10 bg-black px-3 py-2 text-center text-lg font-semibold text-white"
                     />
+                    {charErrorMessage && (
+                        <Text className="mt-1 text-xs text-red-400">The number is invalid</Text>
+                    )}
+
+                    {numErrorMessage && (
+                        <Text className="mt-1 text-xs text-red-400">You can't put numbers less or equal to 0.</Text>
+                    )}
 
                     <View className="mt-4 flex-row items-center justify-between">
                         <View className="flex-row items-center gap-2">

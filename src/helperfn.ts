@@ -58,7 +58,10 @@ export const calculateNewStreak = (
             ({ runStreak, currentStreak, bestStreak, foundCurrent } = endRun(runStreak, currentStreak, bestStreak, foundCurrent, isoDate, today))
         }
         if (isoDate === start) {
-            ({ runStreak, currentStreak, bestStreak, foundCurrent } = endRun(runStreak, currentStreak, bestStreak, foundCurrent, isoDate, today))
+            if (!foundCurrent) currentStreak = runStreak
+            if (runStreak > bestStreak) {
+                bestStreak = runStreak
+            }
         }
         date.setUTCDate(date.getUTCDate() - 1)
     } while (isoDate > start)

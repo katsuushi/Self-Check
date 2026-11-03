@@ -10,7 +10,8 @@ export const editPastDay = async (id: number, date: string, value: DayStatus, am
     if (value !== 0 && value !== 1 && value !== 2) return { success: false, error: "The value parameter is invalid." }
     const [row] = await db.select().from(habit).where(eq(habit.id, id));
     if (!row) return { success: false, error: "No habit found with the requested id." }
-    // Measurable habits keep a positive finite amount as the value for that day.
+    if (row.habitType === "measurable" && !amount && value === 1) return { success: false, error: "Habit is measurable, but the amount is invalid." }
+
     const amountToStore =
         row.habitType === "measurable" &&
             value === 1 &&

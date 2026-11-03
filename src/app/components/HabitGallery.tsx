@@ -35,9 +35,9 @@ export default function HabitGallery(props: HabitDisplayProps) {
     }, [props.refreshKey])
 
     return (
-        <ScrollView className="p-4 border-2 border-white" contentContainerStyle={{ gap: 12 }}>
+        <ScrollView className="p-4" contentContainerStyle={{ gap: 12 }}>
             {habits.map(habit => (
-                <View key={habit.id} className="border-4 border-white bg-[#FF0000]">
+                <View key={habit.id}>
                     <HabitBody
                         key={habit.id}
                         id={habit.id}
