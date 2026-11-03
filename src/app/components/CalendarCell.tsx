@@ -76,32 +76,34 @@ export default function CalendarCell(props: CellData) {
                                 {statusLabel}
                             </Text>
 
-                            <View className="mt-4 flex-row justify-evenly">
+                            <View className="mt-4 flex-row items-center justify-between">
+                                <View className="flex-row items-center gap-2">
+                                    <Pressable
+                                        onPress={() => editDay(2)}
+                                        className="h-11 w-11 items-center justify-center rounded-md active:bg-white/20"
+                                        accessibilityRole="button"
+                                        accessibilityLabel="Skip day"
+                                    >
+                                        <Text className="text-2xl font-bold text-white">—</Text>
+                                    </Pressable>
+
+                                    <Pressable
+                                        onPress={() => editDay(0)}
+                                        className="h-11 w-11 items-center justify-center rounded-md active:bg-white/20"
+                                        accessibilityRole="button"
+                                        accessibilityLabel="Mark not completed"
+                                    >
+                                        <Text className="text-2xl font-bold text-white">✕</Text>
+                                    </Pressable>
+                                </View>
+
                                 <Pressable
                                     onPress={() => editDay(1)}
-                                    className="h-14 w-14 items-center justify-center rounded-md active:bg-white/20"
+                                    className={`ml-4 h-14 w-14 items-center justify-center rounded-md`}
                                     accessibilityRole="button"
                                     accessibilityLabel="Mark completed"
                                 >
-                                    <Text className="text-3xl font-bold text-white">✓</Text>
-                                </Pressable>
-
-                                <Pressable
-                                    onPress={() => editDay(2)}
-                                    className="h-14 w-14 items-center justify-center rounded-md active:bg-white/20"
-                                    accessibilityRole="button"
-                                    accessibilityLabel="Skip day"
-                                >
-                                    <Text className="text-3xl font-bold text-white">—</Text>
-                                </Pressable>
-
-                                <Pressable
-                                    onPress={() => editDay(0)}
-                                    className="h-14 w-14 items-center justify-center rounded-md active:bg-white/20"
-                                    accessibilityRole="button"
-                                    accessibilityLabel="Mark not completed"
-                                >
-                                    <Text className="text-3xl font-bold text-white">✕</Text>
+                                    <Text className="text-3xl font-bold text-white">→</Text>
                                 </Pressable>
                             </View>
                         </View>

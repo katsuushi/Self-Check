@@ -2,7 +2,8 @@ import { db } from "../db/client"
 import { habit } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import type { Result } from "@/types"
-import { applyHistoryValue, calculateNewStreak } from "@/helperfn"
+import { applyHistoryValue } from "@/helper/helperfn"
+import { calculateNewStreak } from "@/helper/calculateNewStreak"
 
 export const onMarkHabit = async (id: number, value: 0 | 1): Promise<Result> => {
     if (!id) return { success: false, error: "No id has been passed." }

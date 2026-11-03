@@ -2,7 +2,8 @@ import { db } from "../db/client"
 import { habit } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import type { DayStatus, ReturnFromEditDay } from "@/types"
-import { applyHistoryValue, calculateNewStreak, localISODate } from "@/helperfn"
+import { applyHistoryValue, localISODate } from "@/helper/helperfn"
+import { calculateNewStreak } from "@/helper/calculateNewStreak"
 
 export const editPastDay = async (id: number, date: string, value: DayStatus, amount?: number): Promise<ReturnFromEditDay> => {
 
