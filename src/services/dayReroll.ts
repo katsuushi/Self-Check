@@ -7,7 +7,7 @@ import { resetLoop, resetStreak, timeDifference } from "@/helper/helperfn"
 // This function checks whether a calendar day has passed
 // Used for reseting the streak / setting the completion to false on a new day
 
-export const updateHabitLoop = async (id: number): Promise<Result> => {
+export const dayReroll = async (id: number): Promise<Result> => {
     if (!id) return { success: false, error: "No id has been passed." }
 
     const [row] = await db.select().from(habit).where(eq(habit.id, id))
