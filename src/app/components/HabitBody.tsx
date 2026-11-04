@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import MeasurableMarkMenu from "./MeasurableMarkMenu";
 import { editPastDay } from "@/services/editPastDay";
 import { onMarkHabit } from "@/services/onMarkHabit"
-import { updateHabitLoop } from "@/services/dayReroll";
+import { dayReroll } from "@/services/dayReroll";
 import { localISODate } from "@/helper/helperfn";
 import type { DayStatus, HabitBodyProps } from "@/types";
 import { useFlagsStore } from "@/stores/habitData";
@@ -30,19 +30,6 @@ export default function HabitBody({
     const initialMeasurableAmount = typeof todayHistoryValue === "number" && Number.isFinite(todayHistoryValue) && todayHistoryValue > 0
         ? todayHistoryValue
         : undefined;
-
-    useEffect(() => {
-        calendarLoop()
-    }, [])
-
-    const calendarLoop = async () => {
-        const res = await updateHabitLoop(id);
-        if (res.success) {
-            updateUI()
-        } else if (!res.success) {
-            // Error handling
-        }
-    }
 
     const openMeasurableMark = () => {
         setMarkMenuOpen(true);

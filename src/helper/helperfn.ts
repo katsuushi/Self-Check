@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import type { InferSelectModel } from "drizzle-orm";
-import { db } from "@/db/client";
+import { db, HabitTx } from "@/db/client";
 import { habit } from "@/db/schema";
 import type { HabitHistory } from "@/types";
 
@@ -38,16 +38,14 @@ export const timeDifference = (latestMark: Date): number => {
     return Math.round((localDay(new Date()) - localDay(latestMark)) / 864e5);
 };
 
-export const resetLoop = async (id: number, row: InferSelectModel<typeof habit>) => {
-    await db.update(habit).set({ completed: false, prevLatestMark: row.latestMark }).where(eq(habit.id, id))
+export const resetLoop = (tx: HabitTx, row: InferSelectModel<typeof habit>) => {
+    tx.update(habit).set({ completed: false, prevLatestMark: row.latestMark }).where(eq(habit.id, row.id)).run();
 }
 
-export const resetStreak = async (id: number, row: InferSelectModel<typeof habit>) => {
-    // Missing history keys already mean "not completed", so there is no
-    // history to write here. Keep latestMark as the real last mark.
-    await db.update(habit).set({
+export const resetStreak = (tx: HabitTx, row: InferSelectModel<typeof habit>) => {
+    tx.update(habit).set({
         completed: false,
         streak: 0,
         prevLatestMark: row.latestMark,
-    }).where(eq(habit.id, id))
+    }).where(eq(habit.id, row.id)).run()
 }
