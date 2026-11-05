@@ -6,7 +6,7 @@ import Logo from "./components/Logo"
 import NavigationBar from "./components/NavigationBar"
 
 import * as SystemUI from 'expo-system-ui'
-import useAppBootStrap from "./useAppBootstrap";
+import useAppBootStrap from "../hooks/useAppBootstrap";
 
 
 
