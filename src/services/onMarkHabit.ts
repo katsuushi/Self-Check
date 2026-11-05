@@ -1,4 +1,4 @@
-import { db } from "../db/client"
+import { db } from "@/db/client"
 import { habit } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import type { Result } from "@/types"

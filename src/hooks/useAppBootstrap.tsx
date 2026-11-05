@@ -9,9 +9,9 @@ export default function useAppBootStrap() {
     const [reroll, setReroll] = useState(false)
     const [rerollError, setRerollError] = useState<string | null>(null)
 
-    const calendarReroll = async (cancelled: boolean) => {
+    const calendarReroll = async (isCancelled: () => boolean) => {
         const res = await dayReroll()
-        if (cancelled) return;
+        if (isCancelled()) return;
         if (res.success) return setReroll(true);
         else setRerollError(res.error ?? "DayReroll failed");
     }
@@ -21,7 +21,7 @@ export default function useAppBootStrap() {
 
         let cancelled = false;
 
-        calendarReroll(cancelled)
+        void calendarReroll(() => cancelled)
 
         return () => {
             cancelled = true;
