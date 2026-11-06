@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { applyHistoryValue, localISODate, timeDifference } from "./helperfn";
+import { applyHistoryValue, calculateTotalUnits, localISODate, timeDifference } from "./helperfn";
 
 vi.mock("@/db/client", () => ({
     db: {},
@@ -181,3 +181,21 @@ describe("timeDifference", () => {
         expect(Number.isNaN(timeDifference(new Date("not a date")))).toBe(true);
     });
 });
+
+describe("calculateTotalUnits", () => {
+    beforeEach(() => {
+        vi.useFakeTimers();
+        vi.setSystemTime(NOW);
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
+        vi.restoreAllMocks();
+    });
+    it("calculates all hours spend", () => {
+        expect(calculateTotalUnits({ "2026-10-10": 3.2, "2026-10-11": 1.2, "2026-10-12": 1.6 })).toBe(6.00)
+    })
+    it("omits any boolean values", () => {
+        expect(calculateTotalUnits({ "2026-10-10": 3.2, "2026-10-11": false, "2026-10-12": 1.6, "2026-10-13": true })).toBe(4.80)
+    })
+})

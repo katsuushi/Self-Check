@@ -101,6 +101,7 @@ export type HabitData = {
     streak: number;
     bestStreak: number
     createdAt: Date;
+    totalUnits?: number
 };
 
 export type HabitOverviewParams = {
@@ -114,6 +115,7 @@ export type HabitOverviewParams = {
     habitType?: string;
     targetGoal?: string;
     createdAt: string;
+    totalUnits?: string;
 };
 
 // Calendar

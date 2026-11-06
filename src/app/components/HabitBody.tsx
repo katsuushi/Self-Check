@@ -5,9 +5,10 @@ import MeasurableMarkMenu from "./MeasurableMarkMenu";
 import { editPastDay } from "@/services/editPastDay";
 import { onMarkHabit } from "@/services/onMarkHabit"
 import { dayReroll } from "@/services/dayReroll";
-import { localISODate } from "@/helper/helperfn";
+import { calculateTotalUnits, localISODate } from "@/helper/helperfn";
 import type { DayStatus, HabitBodyProps } from "@/types";
 import { useFlagsStore } from "@/stores/habitData";
+import { habit } from "@/db/schema";
 
 export default function HabitBody({
     id,
@@ -79,7 +80,8 @@ export default function HabitBody({
                 habitType: habitType,
                 targetGoal: String(targetGoal),
                 createdAt: createdAt.toISOString(),
-                habitHistory: JSON.stringify(habitHistory)
+                habitHistory: JSON.stringify(habitHistory),
+                totalUnits: (habitType === "measurable" ? calculateTotalUnits(habitHistory) : -1)
             }
         })
     }

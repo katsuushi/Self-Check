@@ -49,3 +49,14 @@ export const resetStreak = (tx: HabitTx, row: InferSelectModel<typeof habit>) =>
         prevLatestMark: row.latestMark,
     }).where(eq(habit.id, row.id)).run()
 }
+
+export const calculateTotalUnits = (history: HabitHistory) => {
+    let totalUnits = 0;
+    for (const date in history) {
+        console.log(history[date])
+        if (typeof history[date] === "number") {
+            totalUnits += history[date]
+        }
+    }
+    return Number(totalUnits.toFixed(2))
+}

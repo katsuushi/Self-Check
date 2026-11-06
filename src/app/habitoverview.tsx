@@ -18,6 +18,7 @@ import CalendarCell, {
 import MeasurableMarkMenu from "./components/MeasurableMarkMenu";
 import { editPastDay } from "@/services/editPastDay";
 import { useFlagsStore } from "@/stores/habitData";
+import { calculateTotalUnits } from "@/helper/helperfn";
 
 export default function HabitOverview() {
     const router = useRouter();
@@ -32,11 +33,13 @@ export default function HabitOverview() {
         habitType,
         targetGoal,
         createdAt,
+        totalUnits
     } = useLocalSearchParams<HabitOverviewParams>();
 
     const [optionsActive, setOptionsActive] = useState(false)
     const [editingHabit, setEditingHabit] = useState(false)
     const [measurableDate, setMeasurableDate] = useState<string | null>(null)
+    const [totalH, setTotalH] = useState(totalUnits ? totalUnits : -1)
     const [habitData, setHabitData] = useState<HabitData>({
         title: title ?? "",
         description: description ?? "",
@@ -76,6 +79,7 @@ export default function HabitOverview() {
                 targetGoal,
             }));
         }
+
         return res.success;
     }
 
@@ -125,6 +129,8 @@ export default function HabitOverview() {
                 bestStreak: res.data.newBestStreak
             }))
             setMeasurableDate(null)
+            setTotalH(calculateTotalUnits(res.data.newHistory))
+
         }
         else if (!res.success) {
             console.log(res.error)
@@ -267,7 +273,28 @@ export default function HabitOverview() {
                             </Text>
                         </View>
                     </View>
+                    {habitType === "measurable" ?
+                        <View className="flex-row justify-evenly items-center mt-8">
+                            <View className="flex-1 items-center">
+                                <View className="flex-row items-center gap-x-2">
+                                    <Image
+                                        source={require("../../assets/images/clock.png")}
+                                        style={{ width: 24, height: 24 }}
+                                        resizeMode="contain"
+                                    />
+                                    <Text className="text-2xl font-bold text-white">
+                                        {totalH}
+                                    </Text>
+                                </View>
+                                <Text className="text-xs text-white/60 mt-1">
+                                    Total
+                                </Text>
+                            </View>
 
+                        </View>
+                        :
+                        <></>
+                    }
                     <View className="h-px bg-white/10 my-8" />
 
                     <Text className="text-white text-2xl font-bold mb-4">Completion Log</Text>
