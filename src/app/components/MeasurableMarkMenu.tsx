@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { KeyboardAvoidingView, Modal, Platform, Pressable, Text, TextInput, View } from "react-native";
+import { KeyboardAvoidingView, Modal, Platform, Pressable, Text, TextInput, View, Image } from "react-native";
 import type { DayStatus, MeasurableMarkMenuProps } from "@/types";
 
 export default function MeasurableMarkMenu({
@@ -105,11 +105,15 @@ export default function MeasurableMarkMenu({
                         <Pressable
                             onPress={() => submit(1)}
                             disabled={!isMeasureValueValid}
-                            className={`ml-4 h-14 w-14 items-center justify-center rounded-md ${isMeasureValueValid ? "active:bg-white/20" : "opacity-40"}`}
+                            className={`ml-4 h-14 w-14 items-center justify-center rounded-md ${isMeasureValueValid && "active:bg-white/20"}`}
                             accessibilityRole="button"
                             accessibilityLabel="Mark completed"
                         >
-                            <Text className="text-3xl font-bold text-white">→</Text>
+                            <Image
+                                source={require("../../../assets/images/right-arrow.png")}
+                                style={{ width: 24, height: 24 }}
+                                resizeMode="contain"
+                            />
                         </Pressable>
                     </View>
                 </View>
