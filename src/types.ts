@@ -65,6 +65,10 @@ export type MeasurableMarkMenuProps = {
     onSubmit: (value: DayStatus, amount?: number) => void | Promise<void>;
 };
 
+export type FirstTimePopupProps = {
+    onClose: () => void;
+};
+
 export type AddHabitProps = {
     updateUI: () => void;
 };
