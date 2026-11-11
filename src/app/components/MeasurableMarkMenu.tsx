@@ -22,18 +22,18 @@ export default function MeasurableMarkMenu({
         trimmedMeasureValue !== "" && Number.isFinite(parsedMeasureValue) && parsedMeasureValue > 0;
 
     const submit = async (value: DayStatus) => {
-        if (value === 1) {
-            if (trimmedMeasureValue === "" || parsedMeasureValue <= 0) {
-                setNumErrorMessage(true);
-                return;
-            }
-            if (!Number.isFinite(parsedMeasureValue)) {
-                setCharErrorMessage(true);
-                return;
-            }
-        }
-        setNumErrorMessage(false)
-        setCharErrorMessage(false)
+        // if (value === 1) {
+        //     if (trimmedMeasureValue === "" || parsedMeasureValue <= 0) {
+        //         setNumErrorMessage(true);
+        //         return;
+        //     }
+        //     if (!Number.isFinite(parsedMeasureValue)) {
+        //         setCharErrorMessage(true);
+        //         return;
+        //     }
+        // }
+        // setNumErrorMessage(false)
+        // setCharErrorMessage(false)
         const amount = value === 1 ? parsedMeasureValue : undefined;
         await onSubmit(value, amount);
     };

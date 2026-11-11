@@ -19,15 +19,13 @@ export const onMarkHabit = async (id: number, value: 0 | 1): Promise<Result> => 
 
     if (value === 0) {
         newLatestMark = row.prevLatestMark
-        const newStreaks = calculateNewStreak(history, row.createdAt.toISOString())
-        newBestStreak = newStreaks.newBestStreak
-        newStreak = newStreaks.newStreak
     } else {
-        newStreak = row.streak + 1
-        if (row.bestStreak < newStreak) newBestStreak += 1
         newLatestMark = new Date()
     }
 
+    const newStreaks = calculateNewStreak(history, row.createdAt)
+    newBestStreak = newStreaks.newBestStreak
+    newStreak = newStreaks.newStreak
     await db.update(habit).set({
         streak: newStreak,
         bestStreak: newBestStreak,

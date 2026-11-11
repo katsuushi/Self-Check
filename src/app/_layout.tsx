@@ -22,9 +22,10 @@ export default function RootLayout() {
     useEffect(() => {
         if (ready) SplashScreen.hideAsync();
     }, [ready]);
-        
+
 
     if (error) {
+        SplashScreen.hideAsync();
         return <View><Text>Error during useAppBootstrap: {error}</Text></View>;
     }
 

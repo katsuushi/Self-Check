@@ -40,13 +40,14 @@ export default function HabitOverview() {
     const [editingHabit, setEditingHabit] = useState(false)
     const [measurableDate, setMeasurableDate] = useState<string | null>(null)
     const [totalH, setTotalH] = useState(totalUnits ? totalUnits : -1)
+    const historyCheckout = useFlagsStore((s) => s.flags)
     const [habitData, setHabitData] = useState<HabitData>({
         title: title ?? "",
         description: description ?? "",
         color: color ?? "#22d3ee",
         habitType: habitType === "measurable" ? "measurable" : "yesNo",
         targetGoal: Number(targetGoal) || 0,
-        habitHistory: useFlagsStore((s) => s.flags),
+        habitHistory: historyCheckout,
         streak: Number(streak) || 0,
         bestStreak: Number(bestStreak) || 0,
         createdAt: createdAt ? new Date(createdAt) : new Date(),

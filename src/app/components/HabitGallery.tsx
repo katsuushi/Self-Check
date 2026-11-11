@@ -4,7 +4,6 @@ import { ScrollView, View } from "react-native";
 import HabitBody from "./HabitBody";
 import { useFocusEffect } from "expo-router";
 import type { Habit, HabitDisplayProps } from "@/types";
-import { useLastStore } from "@/stores/lastDay";
 
 export default function HabitGallery(props: HabitDisplayProps) {
 

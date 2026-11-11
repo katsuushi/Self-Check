@@ -3,7 +3,7 @@ import { localISODate } from "./helperfn";
 
 export const calculateNewStreak = (
     history: HabitHistory,
-    createdAt: string,
+    createdAt: Date,
     target: boolean | number = false,
     currentDate = new Date(),
 ): NewStreaks => {
@@ -12,7 +12,7 @@ export const calculateNewStreak = (
     let bestStreak = 0;
     let foundCurrent = false;
 
-    const start = createdAt.slice(0, 10)
+    const start = localISODate(createdAt)
     const date = new Date(Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()))
     const today = localISODate()
     let isoDate: string;
