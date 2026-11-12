@@ -13,7 +13,7 @@ describe("calculateNewStreak", () => {
     beforeEach(() => {
         vi.useFakeTimers();
         vi.setSystemTime(NOW);
-        vi.spyOn(console, "log").mockImplementation(() => {});
+        vi.spyOn(console, "log").mockImplementation(() => { });
     });
 
     afterEach(() => {
@@ -22,7 +22,7 @@ describe("calculateNewStreak", () => {
     });
 
     it("returns zero for an empty history", () => {
-        expect(calculateNewStreak({}, CREATED_AT, false, NOW)).toEqual({
+        expect(calculateNewStreak({}, new Date(CREATED_AT), 0, NOW)).toEqual({
             newStreak: 0,
             newBestStreak: 0,
         });
@@ -34,7 +34,7 @@ describe("calculateNewStreak", () => {
             "2026-11-05": true,
         };
 
-        expect(calculateNewStreak(history, CREATED_AT, false, NOW)).toEqual({
+        expect(calculateNewStreak(history, new Date(CREATED_AT), 0, NOW)).toEqual({
             newStreak: 2,
             newBestStreak: 2,
         });
@@ -46,7 +46,7 @@ describe("calculateNewStreak", () => {
             "2026-11-04": true,
         };
 
-        expect(calculateNewStreak(history, CREATED_AT, false, NOW)).toEqual({
+        expect(calculateNewStreak(history, new Date(CREATED_AT), 0, NOW)).toEqual({
             newStreak: 2,
             newBestStreak: 2,
         });
@@ -58,7 +58,7 @@ describe("calculateNewStreak", () => {
             "2026-11-05": true,
         };
 
-        expect(calculateNewStreak(history, CREATED_AT, false, NOW)).toEqual({
+        expect(calculateNewStreak(history, new Date(CREATED_AT), 0, NOW)).toEqual({
             newStreak: 1,
             newBestStreak: 1,
         });
@@ -72,7 +72,7 @@ describe("calculateNewStreak", () => {
             "2026-11-05": true,
         };
 
-        expect(calculateNewStreak(history, CREATED_AT, false, NOW)).toEqual({
+        expect(calculateNewStreak(history, new Date(CREATED_AT), 0, NOW)).toEqual({
             newStreak: 1,
             newBestStreak: 3,
         });
@@ -84,7 +84,7 @@ describe("calculateNewStreak", () => {
             "2026-11-02": true,
         };
 
-        expect(calculateNewStreak(history, CREATED_AT, false, NOW)).toEqual({
+        expect(calculateNewStreak(history, new Date(CREATED_AT), 0, NOW)).toEqual({
             newStreak: 0,
             newBestStreak: 2,
         });
@@ -97,7 +97,7 @@ describe("calculateNewStreak", () => {
             "2026-11-05": true,
         };
 
-        expect(calculateNewStreak(history, CREATED_AT, false, NOW)).toEqual({
+        expect(calculateNewStreak(history, new Date(CREATED_AT), 0, NOW)).toEqual({
             newStreak: 2,
             newBestStreak: 2,
         });
@@ -110,7 +110,7 @@ describe("calculateNewStreak", () => {
             "2026-11-05": 6,
         };
 
-        expect(calculateNewStreak(history, CREATED_AT, 5, NOW)).toEqual({
+        expect(calculateNewStreak(history, new Date(CREATED_AT), 5, NOW)).toEqual({
             newStreak: 3,
             newBestStreak: 3,
         });
@@ -123,21 +123,21 @@ describe("calculateNewStreak", () => {
             "2026-11-05": 5,
         };
 
-        expect(calculateNewStreak(history, CREATED_AT, 5, NOW)).toEqual({
+        expect(calculateNewStreak(history, new Date(CREATED_AT), 5, NOW)).toEqual({
             newStreak: 1,
             newBestStreak: 1,
         });
     });
 
     it("handles createdAt being today", () => {
-        expect(calculateNewStreak({ "2026-11-05": true }, "2026-11-05", false, NOW)).toEqual({
+        expect(calculateNewStreak({ "2026-11-05": true }, new Date("2026-11-05"), 0, NOW)).toEqual({
             newStreak: 1,
             newBestStreak: 1,
         });
     });
 
     it("returns zero when createdAt is today and the day is unmarked", () => {
-        expect(calculateNewStreak({}, "2026-11-05", false, NOW)).toEqual({
+        expect(calculateNewStreak({}, new Date("2026-11-05"), 0, NOW)).toEqual({
             newStreak: 0,
             newBestStreak: 0,
         });
@@ -150,7 +150,7 @@ describe("calculateNewStreak", () => {
             "2026-11-05": true,
         };
 
-        expect(calculateNewStreak(history, "2026-11-04", false, NOW)).toEqual({
+        expect(calculateNewStreak(history, new Date("2026-11-04"), 0, NOW)).toEqual({
             newStreak: 2,
             newBestStreak: 2,
         });
@@ -160,8 +160,8 @@ describe("calculateNewStreak", () => {
         expect(
             calculateNewStreak(
                 { "2026-11-05": true },
-                "2026-11-01T12:00:00.000Z",
-                false,
+                new Date("2026-11-01T12:00:00.000Z"),
+                0,
                 NOW
             )
         ).toEqual({

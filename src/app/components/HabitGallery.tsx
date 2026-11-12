@@ -12,7 +12,6 @@ export default function HabitGallery(props: HabitDisplayProps) {
     const isFirstRender = useRef(true)
     const getHabits = async () => {
         const res = await listHabits()
-        console.log(res)
         if (res) { setHabits(res) }
 
     }

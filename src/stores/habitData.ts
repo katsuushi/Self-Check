@@ -1,4 +1,4 @@
-import { HabitHistory } from "@/types";
+import type { HabitHistory } from "@/types";
 import { create } from "zustand";
 
 type FlagsStore = {

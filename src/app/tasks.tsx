@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, useWindowDimensions } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 export default function Tasks() {
 
 

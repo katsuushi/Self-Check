@@ -4,7 +4,6 @@ import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import { deleteHabit } from "@/services/deleteHabit";
 import { updateHabit } from "@/services/editHabit";
 import CreateHabit from "./components/CreateHabit";
-import { getHabit } from "@/services/getHabit";
 import type {
     DayStatus,
     HabitData,
@@ -89,20 +88,6 @@ export default function HabitOverview() {
         if (res.success) router.replace("/habits");
     }
 
-    const getHabitHistory = async (id: number) => {
-        const habit = await getHabit(id);
-        if (habit.success) {
-            setHabitData((prev) => ({
-                ...prev,
-                habitHistory: habit.data.habitHistory,
-                habitType: habit.data.habitType,
-                targetGoal: habit.data.targetGoal,
-                streak: habit.data.streak,
-                createdAt: habit.data.createdAt,
-            }));
-        }
-    }
-
     const isoDateRange = (start = new Date(createdAt), end = new Date()) => {
         const out: string[] = [];
         const d = new Date(Date.UTC(start.getFullYear(), start.getMonth(), start.getDate()));
@@ -133,18 +118,13 @@ export default function HabitOverview() {
             setTotalH(calculateTotalUnits(res.data.newHistory))
 
         }
-        else if (!res.success) {
-            console.log(res.error)
-        } else {
-            console.log("Something went wrong")
-        }
     }
 
     const getDayStatus = (date: string): DayStatus => {
         if (!(date in habitData.habitHistory)) return 0;
         else {
             const value = habitData.habitHistory[date]
-            if (value === true || typeof value !== "boolean" && value >= Number(targetGoal)) return 1;
+            if (value === true || typeof value !== "boolean" && value >= Number(habitData.targetGoal)) return 1;
             else if (value === false) return 2;
             else return 0;
         }

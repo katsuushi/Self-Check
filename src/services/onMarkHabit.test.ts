@@ -43,7 +43,7 @@ describe("onMarkHabit", () => {
         vi.restoreAllMocks();
     });
 
-    it("marks a yes/no habit complete and increments the streak", async () => {
+    it("marks a yes/no habit complete and recalculates the streak", async () => {
         fakeDb.reset([makeRow()]);
 
         const result = await onMarkHabit(1, 1);
@@ -106,7 +106,7 @@ describe("onMarkHabit", () => {
         expect(update.values.latestMark).toBe(prevLatestMark);
     });
 
-    it("keeps a higher best streak when marking complete", async () => {
+    it("recalculates the best streak from history when marking complete", async () => {
         fakeDb.reset([makeRow({ bestStreak: 5 })]);
 
         const result = await onMarkHabit(1, 1);
@@ -115,7 +115,7 @@ describe("onMarkHabit", () => {
             success: true,
             data: { streak: 3, completed: true },
         });
-        expect(fakeDb.updates[0]!.values.bestStreak).toBe(5);
+        expect(fakeDb.updates[0]!.values.bestStreak).toBe(3);
     });
 
     it("returns an error when the habit does not exist", async () => {

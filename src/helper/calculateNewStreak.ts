@@ -4,7 +4,7 @@ import { localISODate } from "./helperfn";
 export const calculateNewStreak = (
     history: HabitHistory,
     createdAt: Date,
-    target: boolean | number = false,
+    target: number = 0,
     currentDate = new Date(),
 ): NewStreaks => {
     let runStreak = 0;
@@ -19,16 +19,17 @@ export const calculateNewStreak = (
     do {
         isoDate = date.toISOString().slice(0, 10)
         if (isoDate in history) {
-            console.log(history[isoDate] >= target)
-            if (history[isoDate] === true || history[isoDate] >= target && history[isoDate] !== false) runStreak += 1
+            const value = history[isoDate]
+            if (typeof value === "boolean" && history[isoDate] === true || typeof value === "number" && value >= target) runStreak += 1
             // target != 0 means the habit is measurable
-            else if (target != 0) {
+            else if (target != 0 && history[isoDate] !== false) {
                 ({ runStreak, currentStreak, bestStreak, foundCurrent } = endRun(runStreak, currentStreak, bestStreak, foundCurrent, isoDate, today))
             }
         }
         else {
             ({ runStreak, currentStreak, bestStreak, foundCurrent } = endRun(runStreak, currentStreak, bestStreak, foundCurrent, isoDate, today))
         }
+
         if (isoDate === start) {
             if (!foundCurrent) currentStreak = runStreak
             if (runStreak > bestStreak) {

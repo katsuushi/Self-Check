@@ -1,14 +1,12 @@
 import { useRouter } from "expo-router"
 import { Pressable, Text, View } from "react-native";
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import MeasurableMarkMenu from "./MeasurableMarkMenu";
 import { editPastDay } from "@/services/editPastDay";
 import { onMarkHabit } from "@/services/onMarkHabit"
-import { dayReroll } from "@/services/dayReroll";
 import { calculateTotalUnits, localISODate } from "@/helper/helperfn";
 import type { DayStatus, HabitBodyProps } from "@/types";
 import { useFlagsStore } from "@/stores/habitData";
-import { habit } from "@/db/schema";
 
 export default function HabitBody({
     id,
@@ -41,8 +39,6 @@ export default function HabitBody({
         if (res.success) {
             setMarkMenuOpen(false);
             updateUI();
-        } else {
-            console.log(res.error)
         }
     }
 
@@ -52,20 +48,13 @@ export default function HabitBody({
             openMeasurableMark();
             return;
         }
-        console.log("calling onMark")
         const res = await onMarkHabit(id, completed ? 0 : 1)
-        console.log(res)
         if (res.success && typeof res.data === "object") {
             updateUI();
-        } else if (!res.success) {
-            //
-        } else {
-            // Something has gone wrong
         }
     }
 
     const onOverview = () => {
-        console.log("clicking on ", title)
         useFlagsStore.getState().setFlags(habitHistory)
         router.push({
             pathname: '../habitoverview',

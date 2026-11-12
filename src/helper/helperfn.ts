@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import type { InferSelectModel } from "drizzle-orm";
-import { db, HabitTx } from "@/db/client";
+import type { HabitTx } from "@/db/client";
 import { habit } from "@/db/schema";
 import type { HabitHistory } from "@/types";
 
@@ -19,7 +19,7 @@ export const applyHistoryValue = (
 ): HabitHistory => {
     const history = { ...habitHistory };
     if (value === 1) {
-        history[isoDate] = (amount ? amount : true);
+        history[isoDate] = (amount && !Number.isNaN(amount) && amount > 0 ? amount : true);
     } else if (value === 0 && isoDate in history) {
         delete history[isoDate];
     } else if (value === 2) {
@@ -43,20 +43,27 @@ export const resetLoop = (tx: HabitTx, row: InferSelectModel<typeof habit>) => {
 }
 
 export const resetStreak = (tx: HabitTx, row: InferSelectModel<typeof habit>) => {
+    const today = localISODate()
     tx.update(habit).set({
         completed: false,
         streak: 0,
-        prevLatestMark: row.latestMark,
+        latestMark: new Date(today),
+        prevLatestMark: new Date(today),
     }).where(eq(habit.id, row.id)).run()
 }
 
 export const calculateTotalUnits = (history: HabitHistory) => {
     let totalUnits = 0;
     for (const date in history) {
-        console.log(history[date])
         if (typeof history[date] === "number") {
             totalUnits += history[date]
         }
     }
     return Number(totalUnits.toFixed(2))
 }
+
+export const isValidISODate = (date: string) => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return false;
+    const d = new Date(date);
+    return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === date;
+};

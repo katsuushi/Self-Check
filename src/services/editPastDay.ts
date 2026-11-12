@@ -2,13 +2,13 @@ import { db } from "@/db/client"
 import { habit } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import type { DayStatus, ReturnFromEditDay } from "@/types"
-import { applyHistoryValue, localISODate } from "@/helper/helperfn"
+import { applyHistoryValue, localISODate, isValidISODate } from "@/helper/helperfn"
 import { calculateNewStreak } from "@/helper/calculateNewStreak"
 
 export const editPastDay = async (id: number, date: string, value: DayStatus, amount?: number): Promise<ReturnFromEditDay> => {
-
     if (!id || !date) return { success: false, error: "Id / Date value hasn't be put or is invalid" }
     if (value !== 0 && value !== 1 && value !== 2) return { success: false, error: "The value parameter is invalid." }
+    if (!isValidISODate(date)) return { success: false, error: "The date is invalid."} 
     const [row] = await db.select().from(habit).where(eq(habit.id, id));
     if (!row) return { success: false, error: "No habit found with the requested id." }
     if (
@@ -27,7 +27,6 @@ export const editPastDay = async (id: number, date: string, value: DayStatus, am
             : undefined;
     const newHistory = applyHistoryValue(row.habitHistory, value, amountToStore, date);
     const today = localISODate()
-    // Editing a past day must not change whether the habit is completed today.
     let newCompleted = row.completed;
     if (date === today) {
         if (value !== 1) {
@@ -47,10 +46,9 @@ export const editPastDay = async (id: number, date: string, value: DayStatus, am
         newLatestMark = row.prevLatestMark
     }
 
-    const newStreaks = calculateNewStreak(newHistory, row.createdAt, (row.habitType === "measurable" && row.targetGoal))
+    const newStreaks = calculateNewStreak(newHistory, row.createdAt, (row.habitType === "measurable" ? row.targetGoal : 0))
 
     await db.update(habit).set({ completed: newCompleted, latestMark: newLatestMark, streak: newStreaks.newStreak, bestStreak: newStreaks.newBestStreak, habitHistory: newHistory }).where(eq(habit.id, id))
-    console.log(`newStreak: ${newStreaks.newStreak}`)
 
     return { success: true, data: { newStreak: newStreaks.newStreak, newBestStreak: newStreaks.newBestStreak, newHistory: newHistory } }
 }

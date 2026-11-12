@@ -40,7 +40,6 @@ export default function AddHabit(props: AddHabitProps) {
                     props.updateUI();
                     return true;
                 }
-                console.log(res.error);
                 return false;
             }}
         />

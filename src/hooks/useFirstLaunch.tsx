@@ -1,27 +1,33 @@
 import { useEffect, useState } from "react"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
+const KEY = "hasLaunchedBefore"
+
 export const useFirstLaunch = () => {
     const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
 
-    const KEY = "hasLaunchedBefore"
-
     useEffect(() => {
+        let cancelled = false;
+
         (async () => {
             try {
                 const res = await AsyncStorage.getItem(KEY);
-                if (res === null) {
-                    setIsFirstLaunch(true)
-                    await AsyncStorage.setItem(KEY, 'true')
-                } else {
-                    setIsFirstLaunch(false);
-                }
+                if (!cancelled) setIsFirstLaunch(res === null);
             } catch {
-                setIsFirstLaunch(false)
+                if (!cancelled) setIsFirstLaunch(false);
             }
         })();
+
+        return () => {
+            cancelled = true;
+        };
     }, [])
 
-    return isFirstLaunch;
+    const markLaunched = () => {
+        setIsFirstLaunch(false);
+        AsyncStorage.setItem(KEY, "true").catch(() => false);
+    }
+
+    return { isFirstLaunch, markLaunched };
 
 }

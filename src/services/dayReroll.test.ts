@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { fakeDb } from "@/test/fakeDb";
 import { dayReroll } from "./dayReroll";
+import { localISODate } from "@/helper/helperfn";
 
 vi.mock("@/db/client", async () => {
     const { fakeDb } = await import("@/test/fakeDb");
@@ -31,7 +32,7 @@ describe("dayReroll", () => {
     beforeEach(() => {
         vi.useFakeTimers();
         vi.setSystemTime(NOW);
-        vi.spyOn(console, "log").mockImplementation(() => {});
+        vi.spyOn(console, "log").mockImplementation(() => { });
         fakeDb.reset();
     });
 
@@ -62,6 +63,7 @@ describe("dayReroll", () => {
 
     it("resets the streak when the last mark is at least two days old", async () => {
         const latestMark = new Date(2026, 10, 3, 12);
+        const today = new Date(localISODate())
         fakeDb.reset([makeRow({ latestMark })]);
 
         const result = await dayReroll();
@@ -74,7 +76,8 @@ describe("dayReroll", () => {
         expect(update.values).toEqual({
             completed: false,
             streak: 0,
-            prevLatestMark: latestMark,
+            latestMark: today,
+            prevLatestMark: today,
         });
     });
 
@@ -122,10 +125,11 @@ describe("dayReroll", () => {
     it("processes multiple habits in a single transaction", async () => {
         const yesterday = new Date(2026, 10, 4, 12);
         const twoDaysAgo = new Date(2026, 10, 3, 12);
+        const today = new Date(localISODate(new Date(2026, 10, 5, 12)))
         fakeDb.reset([
             makeRow({ id: 1, latestMark: yesterday }),
             makeRow({ id: 2, latestMark: twoDaysAgo }),
-            makeRow({ id: 3, latestMark: new Date(2026, 10, 5, 8) }),
+            makeRow({ id: 3, latestMark: today }),
         ]);
 
         const result = await dayReroll();
@@ -140,7 +144,8 @@ describe("dayReroll", () => {
         expect(fakeDb.updates[1]!.values).toEqual({
             completed: false,
             streak: 0,
-            prevLatestMark: twoDaysAgo,
+            latestMark: today,
+            prevLatestMark: today,
         });
     });
 });

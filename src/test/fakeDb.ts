@@ -75,7 +75,6 @@ export class FakeDb {
 
         try {
             const result = callback(this);
-            // expo-sqlite transactions are synchronous; fail fast if that changes.
             if (result instanceof Promise) {
                 throw new Error("FakeDb.transaction expects a synchronous callback.");
             }
