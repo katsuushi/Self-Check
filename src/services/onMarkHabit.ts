@@ -23,16 +23,20 @@ export const onMarkHabit = async (id: number, value: 0 | 1): Promise<Result> => 
         newLatestMark = new Date()
     }
 
-    const newStreaks = calculateNewStreak(history, row.createdAt)
-    newBestStreak = newStreaks.newBestStreak
-    newStreak = newStreaks.newStreak
-    await db.update(habit).set({
-        streak: newStreak,
-        bestStreak: newBestStreak,
-        completed: value === 1,
-        latestMark: newLatestMark,
-        habitHistory: history
-    }).where(eq(habit.id, id))
+    try {
+        const newStreaks = calculateNewStreak(history, row.createdAt)
+        newBestStreak = newStreaks.newBestStreak
+        newStreak = newStreaks.newStreak
+        await db.update(habit).set({
+            streak: newStreak,
+            bestStreak: newBestStreak,
+            completed: value === 1,
+            latestMark: newLatestMark,
+            habitHistory: history
+        }).where(eq(habit.id, id))
 
-    return { success: true, data: { streak: newStreak, completed: value === 1 } }
+        return { success: true, data: { streak: newStreak, completed: value === 1 } }
+    } catch {
+        return { success: false, error: "The createdAt date is invalid!"}
+    }
 }

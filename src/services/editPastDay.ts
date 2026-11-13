@@ -8,7 +8,7 @@ import { calculateNewStreak } from "@/helper/calculateNewStreak"
 export const editPastDay = async (id: number, date: string, value: DayStatus, amount?: number): Promise<ReturnFromEditDay> => {
     if (!id || !date) return { success: false, error: "Id / Date value hasn't be put or is invalid" }
     if (value !== 0 && value !== 1 && value !== 2) return { success: false, error: "The value parameter is invalid." }
-    if (!isValidISODate(date)) return { success: false, error: "The date is invalid."} 
+    if (!isValidISODate(date)) return { success: false, error: "The date is invalid." }
     const [row] = await db.select().from(habit).where(eq(habit.id, id));
     if (!row) return { success: false, error: "No habit found with the requested id." }
     if (
@@ -46,9 +46,12 @@ export const editPastDay = async (id: number, date: string, value: DayStatus, am
         newLatestMark = row.prevLatestMark
     }
 
-    const newStreaks = calculateNewStreak(newHistory, row.createdAt, (row.habitType === "measurable" ? row.targetGoal : 0))
+    try {
+        const newStreaks = calculateNewStreak(newHistory, row.createdAt, (row.habitType === "measurable" ? row.targetGoal : 0))
+        await db.update(habit).set({ completed: newCompleted, latestMark: newLatestMark, streak: newStreaks.newStreak, bestStreak: newStreaks.newBestStreak, habitHistory: newHistory }).where(eq(habit.id, id))
+        return { success: true, data: { newStreak: newStreaks.newStreak, newBestStreak: newStreaks.newBestStreak, newHistory: newHistory } }
+    } catch {
+        return { success: false, error: "The createdAt date is invalid!" }
+    }
 
-    await db.update(habit).set({ completed: newCompleted, latestMark: newLatestMark, streak: newStreaks.newStreak, bestStreak: newStreaks.newBestStreak, habitHistory: newHistory }).where(eq(habit.id, id))
-
-    return { success: true, data: { newStreak: newStreaks.newStreak, newBestStreak: newStreaks.newBestStreak, newHistory: newHistory } }
 }

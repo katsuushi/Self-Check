@@ -11,7 +11,7 @@ export const calculateNewStreak = (
     let currentStreak = 0;
     let bestStreak = 0;
     let foundCurrent = false;
-
+    if (Number.isNaN(createdAt.getTime())) throw new Error("The createdAt date is invalid!")
     const start = localISODate(createdAt)
     const date = new Date(Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()))
     const today = localISODate()
